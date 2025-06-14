@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { token, logout } = useAuth();
+  const { token, user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,12 +23,22 @@ const Navbar = () => {
 
       <div className="space-x-4">
         {token ? (
-          <button
-            onClick={handleLogout}
-            className="text-[#e04343] text-lg font-medium px-5 py-2 transition-all cursor-pointer"
-          >
-            LOGOUT
-          </button>
+          <>
+            {user?.role === "admin" && (
+              <button
+                onClick={() => navigate("/admin/dashboard")}
+                className="text-lg font-medium text-[#141414] hover:text-[#036AFF] transition-all cursor-pointer"
+              >
+                ADMIN
+              </button>
+            )}
+            <button
+              onClick={handleLogout}
+              className="text-[#e04343] text-lg font-medium px-5 py-2 transition-all cursor-pointer"
+            >
+              LOGOUT
+            </button>
+          </>
         ) : (
           <>
             <button

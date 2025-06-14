@@ -1,4 +1,5 @@
 import { useState } from "react";
+import BlogTab from "./tabs/BlogTab";
 
 const Main = () => {
     const [activeTab, setActiveTab] = useState<"home" | "qr">("home");
@@ -13,7 +14,7 @@ const Main = () => {
                         : "bg-none"
                         }`}
                 >
-                    HOME
+                    BLOGS
                 </div>
 
                 <div
@@ -28,9 +29,9 @@ const Main = () => {
             </div>
 
             {/* Right Content */}
-            <div className="relative col-span-4 flex bg-[#F5F5F5]/80 rounded-2xl justify-center items-center p-8">
+            <div className="relative col-span-4 bg-[#F5F5F5]/80 rounded-2xl p-6 overflow-hidden h-[78vh]">
                 {activeTab === "home" && (
-                    <div className="text-xl font-medium text-[#141414]">Welcome to the Home Section!</div>
+                    <BlogTab />
                 )}
                 {activeTab === "qr" && (
                     <div className="text-xl font-medium text-[#141414]">This is the QR Section!</div>

@@ -8,6 +8,11 @@ import ResetPassword from './pages/public/resetPassword/ResetPassword';
 import ProtectedRoute from './common/ProtectedRoute';
 import Dashboard from './pages/protected/dashboard/Dashboard';
 import Blog from './pages/public/blog/Blog';
+import CreateBlog from './pages/admin/createBlog/CreateBlog';
+import BlogPage from './pages/public/blog/BlogPage';
+import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
+import AdminRoute from './common/AdminRoite';
+import EditBlog from './pages/admin/editBlog/EditBlog';
 
 function App() {
   return (
@@ -20,8 +25,14 @@ function App() {
         <Route path="/find-email" element={<FindEmail />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPage />} />
 
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />}/>} />
+
+        <Route path="/blog/create/new" element={<AdminRoute element={<CreateBlog />}/>} />
+        <Route path="/admin/dashboard" element={<AdminRoute element={<AdminDashboard />} />} />
+        <Route path="/blog/edit/:slug" element={<AdminRoute element={<EditBlog />} />} />
+
       </Routes>
     </Router>
   );
