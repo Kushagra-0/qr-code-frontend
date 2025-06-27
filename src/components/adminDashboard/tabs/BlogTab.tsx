@@ -1,4 +1,4 @@
-import "./styles/ScrollBar.css";
+import "./styles/ScrollBar.css"
 
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../../common/constant";
@@ -37,24 +37,6 @@ const BlogTab = () => {
     }
   };
 
-  // const handleDelete = async (slug: string) => {
-  //   if (!window.confirm("Are you sure you want to delete this blog?")) return;
-
-  //   try {
-  //     const res = await fetch(`${baseUrl}/blog/${slug}`, {
-  //       method: "DELETE",
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error("Failed to delete blog");
-  //     }
-
-  //     setBlogs(prev => prev.filter(blog => blog.slug !== slug));
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert("Error deleting blog.");
-  //   }
-  // };
 
   const confirmDeleteBlog = async () => {
     if (!blogToDelete) return;
@@ -127,7 +109,11 @@ const BlogTab = () => {
                   {blog.description || "No description"}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
-                  {new Date(blog.createdAt).toLocaleString()}
+                  {new Date(blog.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </p>
               </div>
               <div className="flex gap-4">

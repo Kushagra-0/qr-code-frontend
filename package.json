@@ -18,6 +18,8 @@
     "@tiptap/react": "^2.12.0",
     "@tiptap/starter-kit": "^2.12.0",
     "axios": "^1.8.4",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^3.0.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

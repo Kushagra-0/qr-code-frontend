@@ -13,6 +13,9 @@ import BlogPage from './pages/public/blog/BlogPage';
 import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import AdminRoute from './common/AdminRoite';
 import EditBlog from './pages/admin/editBlog/EditBlog';
+import CreateQrCode from './pages/protected/qrcodes/create/CreateQrCode';
+import QrRedirect from './pages/public/qrRedirect/QrRedirect';
+import QrCodeDetails from './pages/protected/qrcodes/details/QrCodeDetails';
 
 function App() {
   return (
@@ -26,8 +29,11 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPage />} />
+        <Route path="/qrcodes/link/:id" element={<QrRedirect />} />
 
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />}/>} />
+        <Route path="/qrcodes/create" element={<ProtectedRoute element={<CreateQrCode />} />} />
+        <Route path="/qrcodes/details/:id" element={<ProtectedRoute element={<QrCodeDetails />} />} />
 
         <Route path="/blog/create/new" element={<AdminRoute element={<CreateBlog />}/>} />
         <Route path="/admin/dashboard" element={<AdminRoute element={<AdminDashboard />} />} />
