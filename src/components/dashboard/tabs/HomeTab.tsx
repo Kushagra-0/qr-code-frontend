@@ -136,9 +136,12 @@ const HomeTab = () => {
                                 <div className="absolute bottom-4 right-4">
                                     <button
                                         onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                        className="text-blue-600 font-semibold px-6 py-2 cursor-pointer rounded-2xl shadow-[0_0_15px_rgba(59,130,246,0.6)] transition-shadow text-sm"
+                                        className="text-blue-600 flex font-semibold px-4 py-2 cursor-pointer rounded-xl shadow-[0_0_20px_rgba(100,100,100,0.5)] transition-shadow text-sm"
                                     >
                                         DETAILS
+                                        <div className="mt-0.5 ml-1">
+                                            <ArrowRight size={18} />
+                                        </div>
                                     </button>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 import './styles/ScrollBar.css'
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
 import { ArrowRight, Search } from "react-feather";
@@ -82,7 +82,7 @@ const QrCodeTab = () => {
                     filteredQrs.map((qr) => (
                         <div
                             key={qr._id}
-                            className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center"
+                            className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
                         >
                             <div className='flex flex-row my-2'>
                                 <QRCodeSVG
@@ -105,21 +105,32 @@ const QrCodeTab = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex gap-4 flex-col">
+                            <div className='absolute middle-0 right-48 rounded-lg border-2 border-gray-200 px-5 py-7'>
+                                <div className='text-2xl font-medium'>
+                                        {qr.scanCount}
+                                </div>
+                                <div className='text-xs'>
+                                    SCANS
+                                </div>
+                            </div>
+                            <div className="flex items-end mb-20 gap-8 flex-col">
+                                <div className="bg-white flex items-center justify-center px-2 py-1 rounded-lg border-2 border-gray-200 text-[#036AFF] font-bold">
+                                    {qr.isDynamic ? (
+                                        qr.isPaused ? (
+                                            <div className="text-red-500 text-xs">🛑 DYNAMIC • PAUSED</div>
+                                        ) : (
+                                            <span className="text-green-500 text-xs">✅ DYNAMIC • ACTIVE</span>
+                                        )
+                                    ) : (
+                                        <span className="text-gray-500 text-xs">📎 STATIC</span>
+                                    )}
+                                </div>
                                 <button
                                     onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                    className="text-blue-600 font-semibold px-8 py-4 border border-blue-500 cursor-pointer rounded-lg hover:shadow-[0_0_15px_rgba(59,130,246,0.6)] transition-shadow"
+                                    className="absolute bottom-5 right-6 text-blue-600 hover:text-blue-700 border-2 shadow-[0_0_20px_rgba(100,100,100,0.5)] border-gray-200 rounded-xl px-4 py-2 font-semibold cursor-pointer flex flex-row items-center"
                                 >
-                                    DOWNLOAD
-                                </button>
-                                <button
-                                    onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                    className="text-blue-600 w-16 font-semibold cursor-pointer flex flex-row ml-22"
-                                >
-                                    <div>
-                                        Details
-                                    </div>
-                                    <div className='mt-1'>
+                                    <div>DETAILS</div>
+                                    <div className="ml-1 mt-1">
                                         <ArrowRight size={18} />
                                     </div>
                                 </button>

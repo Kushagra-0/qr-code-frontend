@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { baseUrl } from "../../common/constant";
+import { QrCode } from "../../interface/QrCode";
+import { QRCodeSVG } from "qrcode.react";
 
 const CreateQrCodeForm = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
-
+  const [step, setStep] = useState<1 | 2>(1);
+  const [createdQRCode, setCreatedQRCode] = useState<QrCode | null>(null);
   const [content, setContent] = useState("");
   const [color, setColor] = useState("#000000");
   const [isDynamic, setIsDynamic] = useState(false);
@@ -14,18 +17,41 @@ const CreateQrCodeForm = () => {
   const [expiresAt, setExpiresAt] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleInitialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content) {
-      setError("Content is required");
-      return;
-    }
+    if (!content) return setError("Content is required");
 
     try {
       setLoading(true);
-      setError(null);
       const res = await fetch(`${baseUrl}/qrcodes/create`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ content, isDynamic }), // Include isDynamic here
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to create QR code");
+
+      setCreatedQRCode(data.qrCode);
+      setStep(2); // Go to Step 2
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFinalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createdQRCode) return;
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${baseUrl}/qrcodes/${createdQRCode._id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -33,17 +59,15 @@ const CreateQrCodeForm = () => {
         body: JSON.stringify({
           content,
           color,
-          isDynamic,  
+          isDynamic,
           expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to create QR code");
-      }
+      if (!res.ok) throw new Error(data.message || "Failed to update QR code");
 
-      navigate("/dashboard"); // Adjust this to your QR code list route
+      navigate(`/qrcodes/details/${createdQRCode._id}`);
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -52,65 +76,129 @@ const CreateQrCodeForm = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10 bg-[#F5F5F5]/80 shadow-lg rounded-xl p-8">
-      <h1 className="text-2xl font-bold mb-6 text-center text-blue-700">Create New QR Code</h1>
-
+    <div className="mx-auto mt-8">
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">Content</label>
-          <input
-            type="text"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-blue-500"
-            placeholder="Enter the content to encode"
-          />
-        </div>
+      <form onSubmit={step === 1 ? handleInitialSubmit : handleFinalSubmit} className="space-y-6">
+        {/* STEP 1 */}
+        {step === 1 && (
+          <>
+            <div className="w-1/3 bg-[#F5F5F5]/80 rounded-2xl p-8">
+              <h1 className="text-3xl font-bold mb-6">
+                {step === 1 ? "Create QR Code" : ""}
+              </h1>
+              <input
+                type="text"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-0"
+                placeholder="Enter the content"
+              />
+            </div>
 
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">QR Color</label>
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="w-16 h-10 p-1 border rounded"
-          />
-        </div>
+            <div className="w-full flex items-center justify-start mb-4">
+              <div className="flex items-center space-x-4 bg-[#F5F5F5]/80 rounded-2xl p-4 w-40">
 
-        <label className="inline-flex items-center">
-          <input
-            type="checkbox"
-            checked={isDynamic}
-            onChange={() => setIsDynamic(!isDynamic)}
-            className="form-checkbox h-5 w-5"
-          />
-          <span className="ml-2 text-gray-700 font-semibold">Make Dynamic</span>
-        </label>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={isDynamic}
+                    onChange={() => setIsDynamic(!isDynamic)}
+                  />
+                  <div className="w-14 h-8 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors"></div>
+                  <div className="absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform peer-checked:translate-x-6"></div>
+                </label>
 
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">
-            Expiry Date (Optional)
-          </label>
-          <input
-            type="datetime-local"
-            value={expiresAt}
-            onChange={(e) => setExpiresAt(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-blue-500"
-          />
-        </div>
+                <span className={`font-semibold ${isDynamic ? "text-blue-600" : "text-gray-500"}`}>{`${isDynamic ? "Dynamic" : "Static"}`}</span>
+              </div>
+            </div>
+          </>
+        )}
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={loading}
-            className={`px-6 py-2 text-white font-semibold rounded-lg ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-              }`}
-          >
-            {loading ? "Creating..." : "Create QR Code"}
-          </button>
-        </div>
+        {/* STEP 2 */}
+        {step === 2 && createdQRCode && (
+          <>
+            <div className="grid grid-cols-3 h-[78vh] gap-8">
+              <div className="flex justify-center bg-[#F5F5F5]/80 rounded-2xl relative">
+                <img
+                  src="/iphone.png"
+                  alt="iPhone"
+                  className="h-[calc(100vh-300px)] object-contain mt-32"
+                />
+
+                <div
+                  className="absolute top-[42%] right-[26%] bg-white flex justify-center items-center"
+                >
+                  <div className="p-2 bg-white">
+                    <QRCodeSVG
+                      value={createdQRCode.isDynamic ? `${window.location.origin}/qrcodes/link/${createdQRCode._id}` : createdQRCode.content}
+                      size={220}
+                      fgColor={color}
+                    />
+                  </div>
+                </div>
+
+                <div className="absolute top-[85%] flex items-center justify-center bg-[#FFFFFF] text-[#036AFF] font-bold px-16 py-2 border-2 border-gray-900 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`text-4xl font-bold rounded-lg ${loading
+                      ? "cursor-not-allowed"
+                      : "cursor-pointer"
+                      }`}
+                  >
+                    {loading ? "SAVING..." : "SAVE CHANGES"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-[#F5F5F5]/80 rounded-2xl p-8 col-span-2 gap-6">
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Content</label>
+                  <input
+                    type="text"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">QR Color</label>
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    className="w-16 h-10 p-1 border rounded"
+                  />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+
+        {step == 1 &&
+          <div className="flex justify-start">
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-6 py-2 text-white font-semibold rounded-lg ${loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {loading
+                ? step === 1
+                  ? "Creating..."
+                  : "Saving..."
+                : step === 1
+                  ? "CREATE"
+                  : "Save Changes"}
+            </button>
+          </div>
+        }
       </form>
     </div>
   );
