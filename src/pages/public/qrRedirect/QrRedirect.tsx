@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
 
 const QrRedirect = () => {
-    const { id } = useParams();
+    const { shortCode } = useParams();
     const hasFetched = useRef(false);
 
     useEffect(() => {
@@ -12,7 +12,7 @@ const QrRedirect = () => {
 
         const fetchQr = async () => {
             try {
-                const res = await fetch(`${baseUrl}/qrcodes/redirect/${id}`, {
+                const res = await fetch(`${baseUrl}/qrcodes/redirect/${shortCode}`, {
                     method: "GET",
                 });
 
@@ -31,7 +31,7 @@ const QrRedirect = () => {
         };
 
         fetchQr();
-    }, [id]);
+    }, [shortCode]);
 
     return (
         <div className="h-screen flex items-center justify-center">

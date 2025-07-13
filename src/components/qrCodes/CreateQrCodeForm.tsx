@@ -3,15 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { baseUrl } from "../../common/constant";
 import { QrCode } from "../../interface/QrCode";
-import { QRCodeSVG } from "qrcode.react";
+import CustomQRCode from "./CustomQRCode";
 
 const CreateQrCodeForm = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
   const [createdQRCode, setCreatedQRCode] = useState<QrCode | null>(null);
+  const [name, setName] = useState("");
   const [content, setContent] = useState("");
-  const [color, setColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
+  const [dotType, setDotType] = useState<any>("square");
+  const [dotColor, setDotColor] = useState("#000000");
+  const [cornersSquareType, setCornersSquareType] = useState<any>("square");
+  const [cornersSquareColor, setCornersSquareColor] = useState("#000000");
+  const [cornersDotType, setCornersDotType] = useState<any>("square");
+  const [cornersDotColor, setCornersDotColor] = useState("#000000");
   const [isDynamic, setIsDynamic] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expiresAt, setExpiresAt] = useState<string>("");
@@ -29,12 +36,13 @@ const CreateQrCodeForm = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ content, isDynamic }), // Include isDynamic here
+        body: JSON.stringify({ name: content, content, isDynamic }), // Include isDynamic here
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to create QR code");
 
+      setName(content);
       setCreatedQRCode(data.qrCode);
       setStep(2); // Go to Step 2
     } catch (err: any) {
@@ -57,8 +65,15 @@ const CreateQrCodeForm = () => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          name,
           content,
-          color,
+          backgroundColor,
+          dotType,
+          dotColor,
+          cornersSquareType,
+          cornersSquareColor,
+          cornersDotType,
+          cornersDotColor,
           isDynamic,
           expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null,
         }),
@@ -130,11 +145,18 @@ const CreateQrCodeForm = () => {
                 <div
                   className="absolute top-[42%] right-[26%] bg-white flex justify-center items-center"
                 >
-                  <div className="p-2 bg-white">
-                    <QRCodeSVG
-                      value={createdQRCode.isDynamic ? `${window.location.origin}/qrcodes/link/${createdQRCode._id}` : createdQRCode.content}
+                  <div className="p-2" style={{ backgroundColor }}>
+                    <CustomQRCode
+                      data={createdQRCode.isDynamic ? `${window.location.origin}/qr/${createdQRCode.shortCode}` : createdQRCode.content}
+                      bgColor={backgroundColor}
                       size={220}
-                      fgColor={color}
+                      margin={-1}
+                      dotType={dotType}
+                      dotColor={dotColor}
+                      cornersSquareType={cornersSquareType}
+                      cornersSquareColor={cornersSquareColor}
+                      cornersDotType={cornersDotType}
+                      cornersDotColor={cornersDotColor}
                     />
                   </div>
                 </div>
@@ -155,6 +177,16 @@ const CreateQrCodeForm = () => {
 
               <div className="bg-[#F5F5F5]/80 rounded-2xl p-8 col-span-2 gap-6">
                 <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                  />
+                </div>
+
+                <div>
                   <label className="block text-gray-700 font-semibold mb-1">Content</label>
                   <input
                     type="text"
@@ -165,11 +197,89 @@ const CreateQrCodeForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-1">QR Color</label>
+                  <label className="block text-gray-700 font-semibold mb-1">QR Background Color</label>
                   <input
                     type="color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
+                    value={backgroundColor}
+                    onChange={(e) => setBackgroundColor(e.target.value)}
+                    className="w-16 h-10 p-1 border rounded"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Dot Style</label>
+                  <select
+                    value={dotType}
+                    onChange={(e) => setDotType(e.target.value as any)}
+                    className="border rounded px-4 py-2 w-full"
+                  >
+                    <option value="square">Square</option>
+                    <option value="dots">Dots</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="classy">Classy</option>
+                    <option value="classy-rounded">Classy Rounded</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Dot Color</label>
+                  <input
+                    type="color"
+                    value={dotColor}
+                    onChange={(e) => setDotColor(e.target.value)}
+                    className="w-16 h-10 p-1 border rounded"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Corner Square Style</label>
+                  <select
+                    value={cornersSquareType}
+                    onChange={(e) => setCornersSquareType(e.target.value as any)}
+                    className="border rounded px-4 py-2 w-full"
+                  >
+                    <option value="square">Square</option>
+                    <option value="dots">Dots</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="classy">Classy</option>
+                    <option value="classy-rounded">Classy Rounded</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Corner Square Color</label>
+                  <input
+                    type="color"
+                    value={cornersSquareColor}
+                    onChange={(e) => setCornersSquareColor(e.target.value)}
+                    className="w-16 h-10 p-1 border rounded"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Corner Dot Style</label>
+                  <select
+                    value={cornersDotType}
+                    onChange={(e) => setCornersDotType(e.target.value as any)}
+                    className="border rounded px-4 py-2 w-full"
+                  >
+                    <option value="square">Square</option>
+                    <option value="dots">Dots</option>
+                    <option value="rounded">Rounded</option>
+                    <option value="classy">Classy</option>
+                    <option value="classy-rounded">Classy Rounded</option>
+                    <option value="extra-rounded">Extra Rounded</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1">Corner Dot Color</label>
+                  <input
+                    type="color"
+                    value={cornersDotColor}
+                    onChange={(e) => setCornersDotColor(e.target.value)}
                     className="w-16 h-10 p-1 border rounded"
                   />
                 </div>

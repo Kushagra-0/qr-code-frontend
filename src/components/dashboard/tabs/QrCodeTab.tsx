@@ -7,6 +7,7 @@ import { ArrowRight, Search } from "react-feather";
 import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
+import CustomQRCode from '../../qrCodes/CustomQRCode';
 
 const QrCodeTab = () => {
     const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
@@ -85,17 +86,24 @@ const QrCodeTab = () => {
                             className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
                         >
                             <div className='flex flex-row my-2'>
-                                <QRCodeSVG
-                                    value={
-                                        qr.isDynamic
-                                            ? `${window.location.origin}/qrcodes/link/${qr._id}`
-                                            : qr.content
-                                    }
-                                    size={100}
-                                    fgColor={qr.color || "#000"}
-                                />
+                                <div className='border border-gray-300' style={{ backgroundColor: qr.backgroundColor }}>
+                                    <CustomQRCode
+                                        data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
+                                        fgColor={qr.foregroundColor}
+                                        bgColor={qr.backgroundColor}
+                                        size={100}
+                                        margin={0}
+                                        dotType={qr.dotType}
+                                        dotColor={qr.dotColor}
+                                        cornersSquareType={qr.cornersSquareType}
+                                        cornersSquareColor={qr.cornersSquareColor}
+                                        cornersDotType={qr.cornersDotType}
+                                        cornersDotColor={qr.cornersDotColor}
+                                    />
+                                </div>
                                 <div className='mx-4'>
-                                    <p className="text-xl text-gray-600 mt-2">{qr.content}</p>
+                                    <p className="text-xl text-gray-600 mt-2">{qr.name}</p>
+                                    <p className="text-md text-gray-600 mt-1">{qr.content}</p>
                                     <p className="text-xs text-gray-400 mt-1">
                                         {new Date(qr.createdAt).toLocaleDateString("en-US", {
                                             month: "short",
@@ -105,16 +113,16 @@ const QrCodeTab = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className='absolute middle-0 right-48 rounded-lg border-2 border-gray-200 px-5 py-7'>
+                            <div className='absolute middle-0 right-50 rounded-lg border-2 border-gray-200 px-5 py-7'>
                                 <div className='text-2xl font-medium'>
-                                        {qr.scanCount}
+                                    {qr.scanCount}
                                 </div>
                                 <div className='text-xs'>
                                     SCANS
                                 </div>
                             </div>
                             <div className="flex items-end mb-20 gap-8 flex-col">
-                                <div className="bg-white flex items-center justify-center px-2 py-1 rounded-lg border-2 border-gray-200 text-[#036AFF] font-bold">
+                                <div className="bg-white w-40 flex items-center justify-center px-2 py-1 rounded-lg border-2 border-gray-200 text-[#036AFF] font-bold">
                                     {qr.isDynamic ? (
                                         qr.isPaused ? (
                                             <div className="text-red-500 text-xs">🛑 DYNAMIC • PAUSED</div>
@@ -127,7 +135,7 @@ const QrCodeTab = () => {
                                 </div>
                                 <button
                                     onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                    className="absolute bottom-5 right-6 text-blue-600 hover:text-blue-700 border-2 shadow-[0_0_20px_rgba(100,100,100,0.5)] border-gray-200 rounded-xl px-4 py-2 font-semibold cursor-pointer flex flex-row items-center"
+                                    className="absolute bottom-5.5 right-6 w-40 text-blue-600 hover:text-blue-700 border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl px-4 py-4 font-bold cursor-pointer flex flex-row items-center justify-center text-xl"
                                 >
                                     <div>DETAILS</div>
                                     <div className="ml-1 mt-1">

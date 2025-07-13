@@ -7,6 +7,7 @@ import { ArrowRight, Search } from "react-feather";
 import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
+import CustomQRCode from '../../qrCodes/CustomQRCode';
 
 const HomeTab = () => {
     const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
@@ -107,20 +108,25 @@ const HomeTab = () => {
                             >
                                 {/* Content area with padding-bottom to avoid overlap with button */}
                                 <div className="pr-6">
-                                    <div className="flex flex-row py-2">
-                                        <QRCodeSVG
-                                            value={
-                                                qr.isDynamic
-                                                    ? `${window.location.origin}/qrcodes/link/${qr._id}`
-                                                    : qr.content
-                                            }
-                                            size={100}
-                                            fgColor={qr.color || "#000"}
-                                        />
+                                    <div className="flex flex-row my-2">
+                                        <div className='border' style={{ backgroundColor: qr.backgroundColor }}>
+                                            <CustomQRCode
+                                                data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
+                                                fgColor={qr.foregroundColor}
+                                                bgColor={qr.backgroundColor}
+                                                size={100}
+                                                margin={-1}
+                                                dotType={qr.dotType}
+                                                dotColor={qr.dotColor}
+                                                cornersSquareType={qr.cornersSquareType}
+                                                cornersSquareColor={qr.cornersSquareColor}
+                                                cornersDotType={qr.cornersDotType}
+                                                cornersDotColor={qr.cornersSquareColor}
+                                            />
+                                        </div>
                                         <div className="mx-4 flex-1 overflow-hidden">
-                                            <p className="text-xl text-gray-600 mt-2 break-words line-clamp-2">
-                                                {qr.content}
-                                            </p>
+                                            <p className="text-xl text-gray-600 mt-2 break-words line-clamp-2">{qr.name}</p>
+                                            <p className="text-md text-gray-600 mt-1">{qr.content}</p>
                                             <p className="text-xs text-gray-400 mt-1">
                                                 {new Date(qr.createdAt).toLocaleDateString("en-US", {
                                                     month: "short",
@@ -136,7 +142,7 @@ const HomeTab = () => {
                                 <div className="absolute bottom-4 right-4">
                                     <button
                                         onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                        className="text-blue-600 flex font-semibold px-4 py-2 cursor-pointer rounded-xl shadow-[0_0_20px_rgba(100,100,100,0.5)] transition-shadow text-sm"
+                                        className="text-blue-600 flex font-bold px-4 py-2 cursor-pointer rounded-xl border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] transition-shadow text-sm"
                                     >
                                         DETAILS
                                         <div className="mt-0.5 ml-1">
