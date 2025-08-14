@@ -8,9 +8,11 @@ import { QRCodeSVG } from "qrcode.react";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
 import CustomQRCode from '../../qrCodes/CustomQRCode';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const HomeTab = () => {
     const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
+    const [scanAnalytics, setScanAnalytics] = useState<{ [date: string]: number }>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { token, loading: authLoading } = useAuth();
@@ -42,8 +44,25 @@ const HomeTab = () => {
     useEffect(() => {
         if (!authLoading) {
             fetchQrCodes();
+            fetchUserScanAnalytics();
         }
     }, []);
+
+    const fetchUserScanAnalytics = async () => {
+        if (!token) return;
+        try {
+            const res = await fetch(`${baseUrl}/qrcodes/user/analytics`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!res.ok) throw new Error("Failed to fetch scan analytics");
+            const data = await res.json();
+            setScanAnalytics(data.scansOverTime);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const totalScans = qrCodes.reduce((sum, qr) => sum + (qr.scanCount || 0), 0);
     const recentQrs = [...qrCodes]
@@ -52,6 +71,11 @@ const HomeTab = () => {
 
     if (authLoading || loading) return <p>Loading QR codes...</p>;
     //   if (error) return <p className="text-red-500">{error}</p>;
+
+    const scanChartData = Object.entries(scanAnalytics).map(([date, count]) => ({
+        date,
+        scans: count,
+    }));
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -90,10 +114,32 @@ const HomeTab = () => {
                     </div>
 
                     <div className="col-span-2 row-span-4 bg-white rounded-xl max-h-[93%] shadow px-6 py-6">
-                        <p className="text-2xl font-semibold text-gray-700 mb-4">Recent Blog Article</p>
+                        {/* <p className="text-2xl font-semibold text-gray-700 mb-4">Recent Blog Article</p>
                         <h3 className="text-xl font-bold text-gray-800 mb-2">How QR Codes Are Transforming Marketing</h3>
-                        <p className="text-gray-600 mb-4">Explore how businesses are leveraging QR codes to streamline user engagement and track campaign success.</p>
+                        <p className="text-gray-600 mb-4">Explore how businesses are leveraging QR codes to streamline user engagement and track campaign success.</p> */}
+                        <p className="text-2xl font-semibold text-gray-700 mb-2">Scans Over Time</p>
+                        <ResponsiveContainer width="90%" height={230} className="mt-6">
+                            <LineChart data={scanChartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="date" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="scans" stroke="#8884d8" strokeWidth={2} />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
+                    {/* <div className="col-span-2 row-span-4 bg-white rounded-xl shadow px-4 py-4">
+                        <p className="text-2xl font-semibold text-gray-700 mb-2">Scans Over Time</p>
+                        <ResponsiveContainer width="100%" height={200}>
+                            <LineChart data={scanChartData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="date" />
+                                <YAxis />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="scans" stroke="#8884d8" strokeWidth={2} />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div> */}
                 </div>
 
                 {/* Right Section (Recent QR Codes) */}
