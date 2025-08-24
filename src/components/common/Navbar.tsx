@@ -33,6 +33,12 @@ const Navbar = () => {
               </button>
             )}
             <button
+                onClick={() => navigate("/dashboard")}
+                className="text-lg font-medium text-[#141414] hover:text-[#036AFF] transition-all cursor-pointer"
+              >
+                GO TO DASHBOARD
+              </button>
+            <button
               onClick={handleLogout}
               className="text-[#e04343] text-lg font-medium px-5 py-2 transition-all cursor-pointer"
             >

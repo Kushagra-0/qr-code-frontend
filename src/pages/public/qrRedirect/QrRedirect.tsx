@@ -17,6 +17,7 @@ const QrRedirect = () => {
                 });
 
                 const data = await res.json();
+                console.log(data.url);
 
                 if (!res.ok) {
                     throw new Error(data.message || "Invalid response from server.");

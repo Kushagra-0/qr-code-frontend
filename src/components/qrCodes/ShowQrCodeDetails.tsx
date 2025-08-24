@@ -4,12 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { baseUrl } from "../../common/constant";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Clock, Download, Edit2, Eye, Link, Link2, MoreVertical, PauseCircle, Trash2, Users } from "react-feather";
+import { Calendar, Download, Edit2, Link, MoreVertical, PauseCircle, Trash2 } from "react-feather";
 import { QrCode } from "../../interface/QrCode";
-import { toJpeg, toPng, toSvg } from "html-to-image";
-import jsPDF from "jspdf";
 import CustomQRCode from "./CustomQRCode";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import Skeleton from "../common/Skeletion";
 
 interface ShowQrCodeDetailsProps {
   id: string | undefined;
@@ -19,7 +18,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
   const { token } = useAuth();
   const [qrCode, setQrCode] = useState<QrCode | null>(null);
   const [analytics, setAnalytics] = useState<any>(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState('30d');
+  // const [selectedTimeRange, setSelectedTimeRange] = useState('30d');
   const [loading, setLoading] = useState(true);
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [showConfirmPauseModel, setShowConfirmPauseModel] = useState(false);
@@ -28,7 +27,8 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
   const [qrToPause, setQrToPause] = useState<QrCode | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const qrRef = useRef(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const qrRef = useRef<any>(null);
   const navigation = useNavigate();
 
   useEffect(() => {
@@ -163,58 +163,128 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
     }
   };
 
-  const handleDownload = async (format: string) => {
-    if (!qrRef.current) return;
+  // const handleDownload = async (format: string) => {
+  //   if (!qrRef.current) return;
 
-    const fileName = `qr-code`;
+  //   const fileName = `qr-code`;
+
+  //   try {
+  //     switch (format) {
+  //       case "png":
+  //         const pngDataUrl = await toPng(qrRef.current);
+  //         downloadImage(pngDataUrl, `${fileName}.png`);
+  //         break;
+
+  //       case "jpg":
+  //         const jpgDataUrl = await toJpeg(qrRef.current);
+  //         downloadImage(jpgDataUrl, `${fileName}.jpg`);
+  //         break;
+
+  //       case "svg":
+  //         const svgDataUrl = await toSvg(qrRef.current);
+  //         downloadImage(svgDataUrl, `${fileName}.svg`);
+  //         break;
+
+  //       case "pdf":
+  //         const pdfDataUrl = await toPng(qrRef.current);
+  //         const size = 200;
+  //         const pdf = new jsPDF({
+  //           orientation: "portrait",
+  //           unit: "mm",
+  //           format: [size, size],
+  //         });
+  //         pdf.addImage(pdfDataUrl, 'PNG', 0, 0, size, size);
+  //         pdf.save(`${fileName}.pdf`);
+  //         break;
+
+  //       default:
+  //         break;
+  //     }
+  //   } catch (error) {
+  //     console.error("Download error", error);
+  //   }
+  // };
+
+  const handleDownload = async (format: "png" | "jpg" | "svg" | "pdf") => {
+    if (!qrRef.current || isDownloading) return;
+
+    setIsDownloading(true);
+    setShowDownloadDropdown(false);
 
     try {
-      switch (format) {
-        case "png":
-          const pngDataUrl = await toPng(qrRef.current);
-          downloadImage(pngDataUrl, `${fileName}.png`);
-          break;
-
-        case "jpg":
-          const jpgDataUrl = await toJpeg(qrRef.current);
-          downloadImage(jpgDataUrl, `${fileName}.jpg`);
-          break;
-
-        case "svg":
-          const svgDataUrl = await toSvg(qrRef.current);
-          downloadImage(svgDataUrl, `${fileName}.svg`);
-          break;
-
-        case "pdf":
-          const pdfDataUrl = await toPng(qrRef.current);
-          const size = 200;
-          const pdf = new jsPDF({
-            orientation: "portrait",
-            unit: "mm",
-            format: [size, size],
-          });
-          pdf.addImage(pdfDataUrl, 'PNG', 0, 0, size, size);
-          pdf.save(`${fileName}.pdf`);
-          break;
-
-        default:
-          break;
-      }
+      await qrRef.current.download(format);
     } catch (error) {
-      console.error("Download error", error);
+      console.error("Download error:", error);
+      alert(`Error downloading ${format.toUpperCase()} file. Please try again.`);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
-  const downloadImage = (dataUrl: string, fileName: string) => {
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = fileName;
-    link.click();
-  };
+  if (loading || error || !qrCode || !analytics) {
+    return (
+      <div className="grid grid-cols-8 grid-rows-2 mt-8 gap-8 animate-pulse">
+        {/* Left QR Preview Skeleton */}
+        <div className="col-span-2 row-span-2 bg-gray-200 rounded-2xl flex justify-center items-center">
+          <Skeleton className="w-40 h-40" />
+        </div>
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !qrCode) return <p className="text-red-500">{error || "QR Code not found."}</p>;
-  if (!analytics) return <div className="text-gray-500 text-center">No analytics data available</div>;
+        {/* QR Details Skeleton */}
+        <div className="col-span-6 bg-gray-200 rounded-2xl p-8 flex flex-col justify-between">
+          <Skeleton className="h-8 w-1/3 mb-6" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+
+        {/* Stats Skeletons */}
+        <div className="col-span-2 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/2 mb-4" />
+          <Skeleton className="h-12 w-1/3" />
+        </div>
+
+        <div className="col-span-2 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/2 mb-4" />
+          <Skeleton className="h-12 w-1/3" />
+        </div>
+
+        {/* Download/Edit Buttons */}
+        <div className="col-span-2 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-12 w-full mb-4" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+
+        {/* Chart Skeletons */}
+        <div className="col-span-5 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+
+        <div className="col-span-3 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+
+        <div className="col-span-4 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+
+        <div className="col-span-4 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+
+        <div className="col-span-3 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+
+        <div className="col-span-5 bg-gray-200 rounded-2xl p-8">
+          <Skeleton className="h-6 w-1/4 mb-4" />
+          <Skeleton className="h-60 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4'];
 
@@ -244,25 +314,6 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
     scans: count
   }));
 
-  const MetricCard = ({ title, value, icon: Icon, trend, color = 'blue' }: any) => (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{value.toLocaleString()}</p>
-          {trend && (
-            <p className={`text-sm mt-2 ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {trend > 0 ? '+' : ''}{trend}% vs last period
-            </p>
-          )}
-        </div>
-        <div className={`p-3 rounded-full bg-${color}-100`}>
-          <Icon className={`w-6 h-6 text-${color}-600`} />
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
       <div className="grid grid-cols-8 grid-rows-2 mt-8 gap-8">
@@ -277,9 +328,10 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           <div
             className="absolute top-[35%] right-[22%] bg-white flex justify-center items-center"
           >
-            <div ref={qrRef} className="p-0" style={{ backgroundColor: qrCode.backgroundColor }}>
+            <div className="p-0" style={{ backgroundColor: qrCode.backgroundColor }}>
               <CustomQRCode
-                data={qrCode.isDynamic ? `${window.location.origin}/qr/${qrCode.shortCode}` : qrCode.content}
+                ref={qrRef}
+                data={`${window.location.origin}/qr/${qrCode.shortCode}`}
                 fgColor={qrCode.foregroundColor}
                 bgColor={qrCode.backgroundColor}
                 size={200}
@@ -300,14 +352,14 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           <div className="flex justify-between">
             <div>
               <div className="text-3xl font-bold">
-                {qrCode.name}
+                {qrCode.name ? qrCode.name : <span className="text-gray-300">No Name</span>}
               </div>
-              <div className="flex flex-row mt-7 gap-2">
+              <button onClick={() => window.open(`${window.location.origin}/qr/${qrCode.shortCode}`, "_blank")} className="flex flex-row mt-7 gap-2 cursor-pointer">
                 <Link size={14} className="mt-1.5" />
                 <div className="">
-                  {qrCode.content}
+                  {`${window.location.origin}/qr/${qrCode.shortCode}`}
                 </div>
-              </div>
+              </button>
             </div>
             <div className="flex justify-between items-start">
               <div id="qr-option-dropdown" className="relative">
@@ -419,14 +471,18 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           <div className="flex flex-col w-full gap-6">
             <div id="qr-download-dropdown" className="relative">
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-3xl font-semibold px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(100,100,100,0.5)] cursor-pointer flex items-start gap-4"
-                onClick={() => setShowDownloadDropdown(!showDownloadDropdown)}
+                className={`w-full text-white text-3xl font-semibold px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(100,100,100,0.5)] cursor-pointer flex items-start gap-4 transition-colors ${isDownloading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
+                onClick={() => !isDownloading && setShowDownloadDropdown(!showDownloadDropdown)}
+                disabled={isDownloading}
               >
                 <Download size={30} className="mt-1" />
-                DOWNLOAD
+                {isDownloading ? 'DOWNLOADING...' : 'DOWNLOAD'}
               </button>
 
-              {showDownloadDropdown && (
+              {showDownloadDropdown && !isDownloading && (
                 <div className="absolute mt-2 bg-white border border-gray-200 rounded-lg z-10 shadow-[0_0_20px_rgba(100,100,100,0.5)] w-full">
                   <button
                     onClick={() => handleDownload("png")}
@@ -532,17 +588,17 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
         </div>
 
         <div className="col-span-3 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
-            <h3 className="text-lg font-semibold mb-4">Hourly Distribution</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={hourlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="hour" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="scans" fill="#8B5CF6" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          <h3 className="text-lg font-semibold mb-4">Hourly Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={hourlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="scans" fill="#8B5CF6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
         <div className="col-span-5 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>

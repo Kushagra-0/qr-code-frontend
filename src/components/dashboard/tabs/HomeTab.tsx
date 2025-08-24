@@ -3,12 +3,12 @@ import './styles/ScrollBar.css'
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
-import { ArrowRight, Search } from "react-feather";
-import { QRCodeSVG } from "qrcode.react";
+import { ArrowRight, Calendar, Link } from "react-feather";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
 import CustomQRCode from '../../qrCodes/CustomQRCode';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import Skeleton from '../../common/Skeletion';
 
 const HomeTab = () => {
     const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
@@ -69,13 +69,68 @@ const HomeTab = () => {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, 3);
 
-    if (authLoading || loading) return <p>Loading QR codes...</p>;
+    // if (authLoading || loading) return <p>Loading QR codes...</p>;
     //   if (error) return <p className="text-red-500">{error}</p>;
 
     const scanChartData = Object.entries(scanAnalytics).map(([date, count]) => ({
         date,
         scans: count,
     }));
+
+    if (authLoading || loading || error) {
+        return (
+            <div className="w-full h-full flex flex-col">
+                {/* Header skeleton */}
+                <div className="flex justify-end items-center mb-5 shrink-0">
+                    <Skeleton className="h-12 w-40 rounded-2xl" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-6 grow">
+                    {/* Left Section Skeleton */}
+                    <div className="grid grid-cols-2 grid-rows-6 gap-6">
+                        {/* Total Scans box */}
+                        <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6 flex flex-col">
+                            <Skeleton className="h-6 w-1/3 mb-4" />
+                            <Skeleton className="h-12 w-1/2" />
+                        </div>
+
+                        {/* Blog Article box */}
+                        <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6">
+                            <Skeleton className="h-6 w-1/2 mb-4" />
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-4 w-2/3 mt-2" />
+                        </div>
+
+                        {/* Scans over time chart box */}
+                        <div className="col-span-2 row-span-4 bg-white rounded-xl shadow px-6 py-6">
+                            <Skeleton className="h-6 w-1/4 mb-6" />
+                            <Skeleton className="h-48 w-full" />
+                        </div>
+                    </div>
+
+                    {/* Right Section Skeleton (Recent QRs) */}
+                    <div className="flex flex-col gap-6">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="bg-white rounded-xl shadow px-6 py-4 relative">
+                                <div className="flex flex-row gap-4">
+                                    <Skeleton className="h-29 w-24 rounded-md" />
+                                    <div className="flex-1">
+                                        <Skeleton className="h-6 w-1/2 mb-2" />
+                                        <Skeleton className="h-4 w-3/4 mb-2" />
+                                        <Skeleton className="h-3 w-1/3" />
+                                    </div>
+                                </div>
+                                <div className="absolute bottom-4 right-4">
+                                    <Skeleton className="h-8 w-20 rounded-xl" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -171,15 +226,17 @@ const HomeTab = () => {
                                             />
                                         </div>
                                         <div className="mx-4 flex-1 overflow-hidden">
-                                            <p className="text-xl text-gray-600 mt-2 break-words line-clamp-2">{qr.name}</p>
-                                            <p className="text-md text-gray-600 mt-1">{qr.content}</p>
-                                            <p className="text-xs text-gray-400 mt-1">
-                                                {new Date(qr.createdAt).toLocaleDateString("en-US", {
-                                                    month: "short",
-                                                    day: "numeric",
-                                                    year: "numeric",
-                                                })}
-                                            </p>
+                                            <p className="text-xl text-gray-600 mt-2 break-words line-clamp-2">{qr.name ? qr.name : <span className='text-gray-300'>No Name</span>}</p>
+                                            <div className="flex flex-row gap-2 text-gray-400 mt-1">
+                                                <Calendar size={14} className="mt-1.5" />
+                                                <div>
+                                                    {new Date(qr.createdAt).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    })}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -1,13 +1,13 @@
 import './styles/ScrollBar.css'
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
-import { ArrowRight, Search } from "react-feather";
-import { QRCodeSVG } from "qrcode.react";
+import { ArrowRight, Calendar, Link, Search } from "react-feather";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
 import CustomQRCode from '../../qrCodes/CustomQRCode';
+import Skeleton from '../../common/Skeletion';
 
 const QrCodeTab = () => {
     const [qrCodes, setQrCodes] = useState<QrCode[]>([]);
@@ -47,11 +47,55 @@ const QrCodeTab = () => {
     }, []);
 
     const filteredQrs = qrCodes.filter(qr =>
-        qr.content.toLowerCase().includes(searchTerm.toLowerCase())
+        (qr.name ?? "").toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (authLoading || loading) return <p>Loading QR codes...</p>;
-    //   if (error) return <p className="text-red-500">{error}</p>;
+    if (authLoading || loading) {
+        return (
+            <div className="w-full h-full flex flex-col">
+                {/* Header skeleton */}
+                <div className="flex justify-between items-center mb-4 shrink-0">
+                    <div className="flex items-center gap-2">
+                        <Skeleton className="h-10 w-64 rounded-xl" />
+                    </div>
+                    <Skeleton className="h-12 w-40 rounded-2xl" />
+                </div>
+
+                {/* QR list skeleton */}
+                <div className="overflow-y-auto pr-3 space-y-4 grow mt-2 custom-scrollbar">
+                    {[1, 2, 3].map((i) => (
+                        <div
+                            key={i}
+                            className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
+                        >
+                            {/* QR preview + text */}
+                            <div className="flex flex-row gap-4">
+                                <Skeleton className="h-24 w-24 rounded-md" />
+                                <div className="flex flex-col gap-2 mt-2">
+                                    <Skeleton className="h-6 w-40" />
+                                    <Skeleton className="h-4 w-60" />
+                                    <Skeleton className="h-3 w-24" />
+                                </div>
+                            </div>
+
+                            {/* Scan count box */}
+                            <div className="absolute middle-0 right-50 rounded-lg border-2 border-gray-200 px-5 py-7">
+                                <Skeleton className="h-6 w-10 mb-2" />
+                                <Skeleton className="h-3 w-12" />
+                            </div>
+
+                            {/* Right-side buttons */}
+                            <div className="flex items-end mb-4 gap-8 flex-col">
+                                <Skeleton className="h-8 w-40 rounded-lg" />
+                                <Skeleton className="h-10 w-40 rounded-xl" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -88,7 +132,7 @@ const QrCodeTab = () => {
                             <div className='flex flex-row my-2'>
                                 <div className='border border-gray-300' style={{ backgroundColor: qr.backgroundColor }}>
                                     <CustomQRCode
-                                        data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
+                                        data={`${window.location.origin}/qr/${qr.shortCode}`}
                                         fgColor={qr.foregroundColor}
                                         bgColor={qr.backgroundColor}
                                         size={100}
@@ -102,15 +146,23 @@ const QrCodeTab = () => {
                                     />
                                 </div>
                                 <div className='mx-4'>
-                                    <p className="text-xl text-gray-600 mt-2">{qr.name}</p>
-                                    <p className="text-md text-gray-600 mt-1">{qr.content}</p>
-                                    <p className="text-xs text-gray-400 mt-1">
-                                        {new Date(qr.createdAt).toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                            year: "numeric",
-                                        })}
-                                    </p>
+                                    <p className="text-xl text-gray-700 mt-2">{qr.name ? qr.name : <span className='text-gray-300'>No Name</span>}</p>
+                                    <button onClick={() => window.open(`${window.location.origin}/qr/${qr.shortCode}`, "_blank")} className="flex flex-row text-sm text-gray-600 mt-3 gap-2 cursor-pointer ">
+                                        <Link size={12} className="mt-1" />
+                                        <div className="">
+                                            {`${window.location.origin}/qr/${qr.shortCode}`}
+                                        </div>
+                                    </button>
+                                    <div className="flex flex-row text-xs text-gray-400 gap-2 mt-2">
+                                        <Calendar size={12} className="mt-0.5" />
+                                        <div>
+                                            {new Date(qr.createdAt).toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                                year: "numeric",
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className='absolute middle-0 right-50 rounded-lg border-2 border-gray-200 px-5 py-7'>
