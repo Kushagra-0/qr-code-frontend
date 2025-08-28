@@ -1,5 +1,3 @@
-import './styles/ScrollBar.css'
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
