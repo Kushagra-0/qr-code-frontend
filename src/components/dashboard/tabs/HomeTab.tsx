@@ -200,7 +200,8 @@ const HomeTab = () => {
                 {/* Right Section (Recent QR Codes) */}
                 <div className="flex flex-col gap-6 overflow-visible">
                     {recentQrs.length === 0 ? (
-                        <p>No recent QR codes found.</p>
+                        // <p>No recent QR codes found.</p>
+                        <></>
                     ) : (
                         recentQrs.map((qr) => (
                             <div
@@ -210,13 +211,12 @@ const HomeTab = () => {
                                 {/* Content area with padding-bottom to avoid overlap with button */}
                                 <div className="pr-6">
                                     <div className="flex flex-row my-2">
-                                        <div className='border' style={{ backgroundColor: qr.backgroundColor }}>
+                                        <div className='border'>
                                             <CustomQRCode
                                                 data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
-                                                fgColor={qr.foregroundColor}
-                                                bgColor={qr.backgroundColor}
                                                 size={100}
                                                 margin={-1}
+                                                backgroundOptions={qr.backgroundOptions}
                                                 dotType={qr.dotType}
                                                 dotColor={qr.dotColor}
                                                 cornersSquareType={qr.cornersSquareType}

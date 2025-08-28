@@ -122,7 +122,8 @@ const QrCodeTab = () => {
             {/* Scrollable QR list */}
             <div className="overflow-y-auto pr-3 space-y-4 grow mt-2 custom-scrollbar">
                 {filteredQrs.length === 0 ? (
-                    <p>No QR codes found.</p>
+                    // <p>No QR codes found.</p>    
+                    <></>
                 ) : (
                     filteredQrs.map((qr) => (
                         <div
@@ -130,13 +131,12 @@ const QrCodeTab = () => {
                             className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
                         >
                             <div className='flex flex-row my-2'>
-                                <div className='border border-gray-300' style={{ backgroundColor: qr.backgroundColor }}>
+                                <div className='border border-gray-300'>
                                     <CustomQRCode
                                         data={`${window.location.origin}/qr/${qr.shortCode}`}
-                                        fgColor={qr.foregroundColor}
-                                        bgColor={qr.backgroundColor}
                                         size={100}
                                         margin={0}
+                                        backgroundOptions={qr.backgroundOptions}
                                         dotType={qr.dotType}
                                         dotColor={qr.dotColor}
                                         cornersSquareType={qr.cornersSquareType}

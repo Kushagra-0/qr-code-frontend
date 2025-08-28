@@ -31,7 +31,19 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
     const [name, setName] = useState("");
     const [qrType, setQrType] = useState<string>("");
     const [typeData, setTypeData] = useState<any>({});
-    const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+    // const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+    const [isBackgroundGradient, setIsBackgroundGradient] = useState(false);
+    const [backgroundOptions, setBackgroundOptions] = useState<any>({
+        color: "#ffffff",
+        gradient: {
+            type: "linear",
+            rotation: 0,
+            colorStops: [
+                { offset: 0, color: "#ffffff" },
+                { offset: 1, color: "#ffffff" },
+            ],
+        },
+    });
     const [dotType, setDotType] = useState<any>("");
     const [dotColor, setDotColor] = useState("#000000");
     const [cornersSquareType, setCornersSquareType] = useState<any>("");
@@ -61,7 +73,13 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                 setName(data.name);
                 setQrType(data.type);
                 setTypeData(data.typeData || {});
-                setBackgroundColor(data.backgroundColor || "#ffffff");
+                if (data.backgroundOptions?.gradient) {
+                    setIsBackgroundGradient(true);
+                    setBackgroundOptions(data.backgroundOptions);
+                } else {
+                    setIsBackgroundGradient(false);
+                    setBackgroundOptions({ color: data.backgroundOptions?.color || "#ffffff" });
+                }
                 setDotType(data.dotType);
                 setDotColor(data.dotColor)
                 setCornersSquareType(data.cornersSquareType);
@@ -93,9 +111,9 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                 },
                 body: JSON.stringify({
                     name,
-                    backgroundColor,
                     dotType,
                     typeData,
+                    backgroundOptions,
                     dotColor,
                     cornersSquareType,
                     cornersSquareColor,
@@ -190,10 +208,10 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                 <div
                     className="absolute top-[42%] right-[28%] bg-white flex justify-center items-center"
                 >
-                    <div className="p-0" style={{ backgroundColor }}>
+                    <div className="p-0">
                         <CustomQRCode
                             data={`${window.location.origin}/qr/${shortCode}`}
-                            bgColor={backgroundColor}
+                            backgroundOptions={backgroundOptions}
                             size={220}
                             margin={0}
                             dotType={dotType}
@@ -311,7 +329,172 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                             />
                                             <ColorPicker color={dotColor} onChange={setDotColor} />
                                         </div>
-                                        <div className="border p-2 rounded-lg">
+
+                                        <div>
+                                            <div className="block text-sm font-medium text-gray-700 mb-2">QR Background</div>
+
+                                            {/* Toggle Solid / Gradient */}
+                                            <div className="flex items-center gap-6 mb-4">
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        checked={!isBackgroundGradient}
+                                                        onChange={() => {
+                                                            setIsBackgroundGradient(false);
+                                                            setBackgroundOptions({
+                                                                color: "#ffffff",
+                                                                gradient: undefined
+                                                            });
+                                                        }}
+                                                    />
+                                                    <span>Solid</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        checked={isBackgroundGradient}
+                                                        onChange={() => {
+                                                            setIsBackgroundGradient(true);
+                                                            setBackgroundOptions({
+                                                                gradient: {
+                                                                    type: "linear",
+                                                                    rotation: 0,
+                                                                    colorStops: [
+                                                                        { offset: 0, color: "#ffffff" },
+                                                                        { offset: 1, color: "#ffffff" }
+                                                                    ]
+                                                                }
+                                                            });
+                                                        }}
+                                                    />
+                                                    <span>Gradient</span>
+                                                </label>
+                                            </div>
+
+                                            {isBackgroundGradient ?
+                                                <>
+                                                    <div className="grid gap-4">
+                                                        <div className="flex gap-4">
+                                                            <div className="border p-2 rounded-lg">
+                                                                <label className="block text-gray-700 font-semibold text-xs">Start Color</label>
+                                                                <input
+                                                                    value={backgroundOptions.gradient.colorStops[0].color}
+                                                                    onChange={(e) =>
+                                                                        setBackgroundOptions({
+                                                                            gradient: {
+                                                                                ...backgroundOptions.gradient,
+                                                                                colorStops: [
+                                                                                    { ...backgroundOptions.gradient.colorStops[0], color: e.target.value },
+                                                                                    backgroundOptions.gradient.colorStops[1],
+                                                                                ],
+                                                                            },
+                                                                        })
+                                                                    }
+                                                                    className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
+                                                                />
+                                                                <ColorPicker
+                                                                    color={backgroundOptions.gradient.colorStops[0].color}
+                                                                    onChange={(c) =>
+                                                                        setBackgroundOptions({
+                                                                            gradient: {
+                                                                                ...backgroundOptions.gradient,
+                                                                                colorStops: [
+                                                                                    { ...backgroundOptions.gradient.colorStops[0], color: c },
+                                                                                    backgroundOptions.gradient.colorStops[1],
+                                                                                ],
+                                                                            },
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </div>
+
+                                                            <div className="border p-2 rounded-lg">
+                                                                <label className="block text-gray-700 font-semibold text-xs">End Color</label>
+                                                                <input
+                                                                    value={backgroundOptions.gradient.colorStops[1].color}
+                                                                    onChange={(e) =>
+                                                                        setBackgroundOptions({
+                                                                            gradient: {
+                                                                                ...backgroundOptions.gradient,
+                                                                                colorStops: [
+                                                                                    backgroundOptions.gradient.colorStops[0],
+                                                                                    { ...backgroundOptions.gradient.colorStops[1], color: e.target.value },
+                                                                                ],
+                                                                            },
+                                                                        })
+                                                                    }
+                                                                    className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
+                                                                />
+                                                                <ColorPicker
+                                                                    color={backgroundOptions.gradient.colorStops[1].color}
+                                                                    onChange={(c) =>
+                                                                        setBackgroundOptions({
+                                                                            gradient: {
+                                                                                ...backgroundOptions.gradient,
+                                                                                colorStops: [
+                                                                                    backgroundOptions.gradient.colorStops[0],
+                                                                                    { ...backgroundOptions.gradient.colorStops[1], color: c },
+                                                                                ],
+                                                                            },
+                                                                        })
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex gap-4">
+                                                            <div className="border p-2 rounded-lg">
+                                                                <label className="block text-gray-700 font-semibold text-xs">Gradient Type</label>
+                                                                <select
+                                                                    value={backgroundOptions.gradient.type}
+                                                                    onChange={(e) =>
+                                                                        setBackgroundOptions({
+                                                                            ...backgroundOptions,
+                                                                            gradient: { ...backgroundOptions.gradient, type: e.target.value as "linear" | "radial" },
+                                                                        })
+                                                                    }
+                                                                    className="border rounded px-2 py-1"
+                                                                >
+                                                                    <option value="linear">Linear</option>
+                                                                    <option value="radial">Radial</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div className="border p-2 rounded-lg">
+                                                                <label className="block text-gray-700 font-semibold text-xs">Rotation</label>
+                                                                <input
+                                                                    type="number"
+                                                                    value={backgroundOptions.gradient.rotation}
+                                                                    onChange={(e) =>
+                                                                        setBackgroundOptions({
+                                                                            ...backgroundOptions,
+                                                                            gradient: { ...backgroundOptions.gradient, rotation: Number(e.target.value) },
+                                                                        })
+                                                                    }
+                                                                    className="border rounded px-2 py-1 w-24"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <div className="border p-2 rounded-lg">
+                                                        <label className="block text-gray-700 font-semibold text-xs">Background Color</label>
+                                                        <input
+                                                            value={backgroundOptions.color}
+                                                            onChange={(e) => setBackgroundOptions({ color: e.target.value })}
+                                                            className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
+                                                        />
+                                                        <ColorPicker
+                                                            color={backgroundOptions.color}
+                                                            onChange={(c) => setBackgroundOptions({ color: c, gradient: undefined })}
+                                                        />
+                                                    </div>
+                                                </>
+                                            }
+                                        </div>
+                                        {/* <div className="border p-2 rounded-lg">
                                             <label className="block text-gray-700 font-semibold text-xs">Background Color</label>
                                             <input
                                                 value={backgroundColor}
@@ -319,7 +502,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                                 className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
                                             />
                                             <ColorPicker color={backgroundColor} onChange={setBackgroundColor} />
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
 

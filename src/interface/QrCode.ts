@@ -8,11 +8,11 @@ export interface QrCode {
   isPaused: boolean;
   scanCount: number;
   foregroundColor: string;
-  backgroundColor: string;
   dotType: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
   dotColor: string;
   cornersSquareType: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
   cornersSquareColor: string;
   cornersDotType: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
   cornersDotColor: string;
+  backgroundOptions: any;
 }

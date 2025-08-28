@@ -78,6 +78,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
         }
 
         const data = await res.json();
+
         setQrCode(data);
       } catch (err) {
         console.error(err);
@@ -314,6 +315,8 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
     scans: count
   }));
 
+  console.log(qrCode)
+
   return (
     <>
       <div className="grid grid-cols-8 grid-rows-2 mt-8 gap-8">
@@ -328,12 +331,10 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           <div
             className="absolute top-[35%] right-[22%] bg-white flex justify-center items-center"
           >
-            <div className="p-0" style={{ backgroundColor: qrCode.backgroundColor }}>
+            <div className="p-0">
               <CustomQRCode
-                ref={qrRef}
                 data={`${window.location.origin}/qr/${qrCode.shortCode}`}
-                fgColor={qrCode.foregroundColor}
-                bgColor={qrCode.backgroundColor}
+                backgroundOptions={qrCode.backgroundOptions}
                 size={200}
                 margin={0}
                 dotType={qrCode.dotType}

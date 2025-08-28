@@ -2,15 +2,13 @@ import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import QRCodeStyling from "qr-code-styling";
 
 export interface CustomQRCodeHandle {
-  download: (extension: "png" | "jpg" | "svg" | "pdf") => Promise<void>;
+    download: (extension: "png" | "jpg" | "svg" | "pdf") => Promise<void>;
 }
 
 interface CustomQRCodeProps {
     data: string;
     margin?: number;
     size?: number;
-    bgColor?: string;
-    fgColor?: string;
     style?: React.CSSProperties;
     dotType?: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
     dotColor?: string;
@@ -18,13 +16,19 @@ interface CustomQRCodeProps {
     cornersSquareColor?: string;
     cornersDotType?: 'dot' | 'square' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'extra-rounded';
     cornersDotColor?: string;
+    backgroundOptions?: {
+        color?: string;
+        gradient?: {
+            type: "linear" | "radial";
+            rotation?: number;
+            colorStops: { offset: number; color: string }[];
+        };
+    };
 }
 
 const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
     data,
     size = 100,
-    bgColor = "#ffffff",
-    fgColor = "#000000",
     style,
     margin = 0,
     dotType = "square",
@@ -33,6 +37,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
     cornersSquareColor = "#000000",
     cornersDotType = "square",
     cornersDotColor = "#000000",
+    backgroundOptions,
 }, ref) => {
     const divRef = useRef<HTMLDivElement>(null);
     const qrCode = useRef<QRCodeStyling | null>(null);
@@ -44,7 +49,8 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             height: size,
             margin,
             data,
-            type: "svg", 
+            type: "svg",
+            backgroundOptions: backgroundOptions,
             dotsOptions: {
                 type: dotType,
                 color: dotColor,
@@ -57,16 +63,13 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                 type: cornersDotType,
                 color: cornersDotColor,
             },
-            backgroundOptions: {
-                color: bgColor,
-            },
         });
 
         if (divRef.current) {
             qrCode.current.append(divRef.current);
         }
 
-        return () => {
+        return () => {  
             if (divRef.current) divRef.current.innerHTML = "";
         };
     }, []); // Init only once
@@ -79,6 +82,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                 width: size,
                 height: size,
                 margin,
+                backgroundOptions: backgroundOptions,
                 dotsOptions: {
                     type: dotType,
                     color: dotColor,
@@ -90,13 +94,10 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                 cornersDotOptions: {
                     type: cornersDotType,
                     color: cornersDotColor,
-                },
-                backgroundOptions: {
-                    color: bgColor,
-                },
+                },      
             });
         }
-    }, [data, size, margin, fgColor, bgColor, dotType, dotColor, cornersSquareType, cornersSquareColor, cornersDotType, cornersDotColor]);
+    }, [data, size, margin, backgroundOptions, dotType, dotColor, cornersSquareType, cornersSquareColor, cornersDotType, cornersDotColor]);
 
     // Expose download method via ref
     useImperativeHandle(ref, () => ({
@@ -104,7 +105,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             if (!qrCode.current) return;
 
             const fileName = `qr-code`;
-            
+
             try {
                 switch (extension) {
                     case "png":
@@ -113,21 +114,21 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                             extension: "png"
                         });
                         break;
-                    
+
                     case "jpg":
                         await qrCode.current.download({
                             name: fileName,
                             extension: "jpeg"
                         });
                         break;
-                    
+
                     case "svg":
                         await qrCode.current.download({
                             name: fileName,
                             extension: "svg"
                         });
                         break;
-                    
+
                     case "pdf":
                         // For PDF, we need to create it manually since QRCodeStyling doesn't support PDF directly
                         const canvas = document.createElement('canvas');
@@ -138,27 +139,27 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                         const dpi = 300;
                         const scaleFactor = dpi / 96; // 96 DPI is default
                         const scaledSize = size * scaleFactor;
-                        
+
                         canvas.width = scaledSize;
                         canvas.height = scaledSize;
-                        
+
                         // Scale the context to match the DPI
                         ctx.scale(scaleFactor, scaleFactor);
-                        
+
                         // await qrCode.current.drawCanvas(ctx);
-                        
+
                         const dataUrl = canvas.toDataURL('image/png');
-                        
+
                         // Dynamically import jsPDF to avoid bundle issues
                         const { default: jsPDF } = await import('jspdf');
-                        
+
                         const sizeInMm = 100; // 100mm x 100mm
                         const pdf = new jsPDF({
                             orientation: "portrait",
                             unit: "mm",
                             format: [sizeInMm, sizeInMm],
                         });
-                        
+
                         pdf.addImage(dataUrl, 'PNG', 0, 0, sizeInMm, sizeInMm);
                         pdf.save(`${fileName}.pdf`);
                         break;
