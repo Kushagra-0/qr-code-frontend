@@ -162,48 +162,6 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
     }
   };
 
-  // const handleDownload = async (format: string) => {
-  //   if (!qrRef.current) return;
-
-  //   const fileName = `qr-code`;
-
-  //   try {
-  //     switch (format) {
-  //       case "png":
-  //         const pngDataUrl = await toPng(qrRef.current);
-  //         downloadImage(pngDataUrl, `${fileName}.png`);
-  //         break;
-
-  //       case "jpg":
-  //         const jpgDataUrl = await toJpeg(qrRef.current);
-  //         downloadImage(jpgDataUrl, `${fileName}.jpg`);
-  //         break;
-
-  //       case "svg":
-  //         const svgDataUrl = await toSvg(qrRef.current);
-  //         downloadImage(svgDataUrl, `${fileName}.svg`);
-  //         break;
-
-  //       case "pdf":
-  //         const pdfDataUrl = await toPng(qrRef.current);
-  //         const size = 200;
-  //         const pdf = new jsPDF({
-  //           orientation: "portrait",
-  //           unit: "mm",
-  //           format: [size, size],
-  //         });
-  //         pdf.addImage(pdfDataUrl, 'PNG', 0, 0, size, size);
-  //         pdf.save(`${fileName}.pdf`);
-  //         break;
-
-  //       default:
-  //         break;
-  //     }
-  //   } catch (error) {
-  //     console.error("Download error", error);
-  //   }
-  // };
-
   const handleDownload = async (format: "png" | "jpg" | "svg" | "pdf") => {
     if (!qrRef.current || isDownloading) return;
 
@@ -332,15 +290,12 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
             <div className="p-0">
               <CustomQRCode
                 data={`${window.location.origin}/qr/${qrCode.shortCode}`}
-                backgroundOptions={qrCode.backgroundOptions}
                 size={200}
                 margin={0}
-                dotType={qrCode.dotType}
-                dotColor={qrCode.dotColor}
-                cornersSquareType={qrCode.cornersSquareType}
-                cornersSquareColor={qrCode.cornersSquareColor}
-                cornersDotType={qrCode.cornersDotType}
-                cornersDotColor={qrCode.cornersDotColor}
+                backgroundOptions={qrCode.backgroundOptions}
+                dotsOptions={qrCode.dotsOptions}
+                cornersSquareOptions={qrCode.cornersSquareOptions}
+                cornersDotOptions={qrCode.cornersDotOptions}
               />
             </div>
           </div>

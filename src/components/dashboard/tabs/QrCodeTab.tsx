@@ -137,12 +137,9 @@ const QrCodeTab = () => {
                                         size={100}
                                         margin={0}
                                         backgroundOptions={qr.backgroundOptions}
-                                        dotType={qr.dotType}
-                                        dotColor={qr.dotColor}
-                                        cornersSquareType={qr.cornersSquareType}
-                                        cornersSquareColor={qr.cornersSquareColor}
-                                        cornersDotType={qr.cornersDotType}
-                                        cornersDotColor={qr.cornersDotColor}
+                                        dotsOptions={qr.dotsOptions}
+                                        cornersSquareOptions={qr.cornersSquareOptions}
+                                        cornersDotOptions={qr.cornersDotOptions}
                                     />
                                 </div>
                                 <div className='mx-4'>

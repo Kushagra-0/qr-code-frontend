@@ -10,8 +10,6 @@ interface CustomQRCodeProps {
     margin?: number;
     size?: number;
     style?: React.CSSProperties;
-    dotType?: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
-    dotColor?: string;
     cornersSquareType?: 'dot' | 'square' | 'extra-rounded' | 'rounded' | 'dots' | 'classy' | 'classy-rounded';
     cornersSquareColor?: string;
     cornersDotType?: 'dot' | 'square' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'extra-rounded';
@@ -24,6 +22,33 @@ interface CustomQRCodeProps {
             colorStops: { offset: number; color: string }[];
         };
     };
+    dotsOptions?: {
+        color?: string;
+        gradient?: {
+            type: "linear" | "radial";
+            rotation?: number;
+            colorStops: { offset: number; color: string }[];
+        };
+        type: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
+    }
+    cornersSquareOptions?: {
+        color?: string;
+        gradient?: {
+            type: "linear" | "radial";
+            rotation?: number;
+            colorStops: { offset: number; color: string }[];
+        };
+        type: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
+    }
+    cornersDotOptions?: {
+        color?: string;
+        gradient?: {
+            type: "linear" | "radial";
+            rotation?: number;
+            colorStops: { offset: number; color: string }[];
+        };
+        type: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
+    }
 }
 
 const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
@@ -31,13 +56,14 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
     size = 100,
     style,
     margin = 0,
-    dotType = "square",
-    dotColor = "#000000",
     cornersSquareType = "square",
     cornersSquareColor = "#000000",
     cornersDotType = "square",
     cornersDotColor = "#000000",
     backgroundOptions,
+    dotsOptions,
+    cornersSquareOptions,
+    cornersDotOptions
 }, ref) => {
     const divRef = useRef<HTMLDivElement>(null);
     const qrCode = useRef<QRCodeStyling | null>(null);
@@ -51,18 +77,9 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             data,
             type: "svg",
             backgroundOptions: backgroundOptions,
-            dotsOptions: {
-                type: dotType,
-                color: dotColor,
-            },
-            cornersSquareOptions: {
-                type: cornersSquareType,
-                color: cornersSquareColor,
-            },
-            cornersDotOptions: {
-                type: cornersDotType,
-                color: cornersDotColor,
-            },
+            dotsOptions: dotsOptions,
+            cornersSquareOptions: cornersSquareOptions,
+            cornersDotOptions: cornersDotOptions
         });
 
         if (divRef.current) {
@@ -83,21 +100,12 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                 height: size,
                 margin,
                 backgroundOptions: backgroundOptions,
-                dotsOptions: {
-                    type: dotType,
-                    color: dotColor,
-                },
-                cornersSquareOptions: {
-                    type: cornersSquareType,
-                    color: cornersSquareColor,
-                },
-                cornersDotOptions: {
-                    type: cornersDotType,
-                    color: cornersDotColor,
-                },      
+                dotsOptions: dotsOptions,
+                cornersSquareOptions: cornersSquareOptions,
+                cornersDotOptions: cornersDotOptions
             });
         }
-    }, [data, size, margin, backgroundOptions, dotType, dotColor, cornersSquareType, cornersSquareColor, cornersDotType, cornersDotColor]);
+    }, [data, size, margin, backgroundOptions, dotsOptions, cornersSquareOptions, cornersDotOptions, cornersSquareType, cornersSquareColor, cornersDotType, cornersDotColor]);
 
     // Expose download method via ref
     useImperativeHandle(ref, () => ({

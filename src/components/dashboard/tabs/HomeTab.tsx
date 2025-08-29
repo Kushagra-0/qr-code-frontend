@@ -215,12 +215,9 @@ const HomeTab = () => {
                                                 size={100}
                                                 margin={-1}
                                                 backgroundOptions={qr.backgroundOptions}
-                                                dotType={qr.dotType}
-                                                dotColor={qr.dotColor}
-                                                cornersSquareType={qr.cornersSquareType}
-                                                cornersSquareColor={qr.cornersSquareColor}
-                                                cornersDotType={qr.cornersDotType}
-                                                cornersDotColor={qr.cornersSquareColor}
+                                                dotsOptions={qr.dotsOptions}
+                                                cornersSquareOptions={qr.cornersSquareOptions}
+                                                cornersDotOptions={qr.cornersDotOptions}
                                             />
                                         </div>
                                         <div className="mx-4 flex-1 overflow-hidden">

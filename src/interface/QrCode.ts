@@ -15,4 +15,7 @@ export interface QrCode {
   cornersDotType: "dots" | "rounded" | "classy" | "classy-rounded" | "square" | "extra-rounded";
   cornersDotColor: string;
   backgroundOptions: any;
+  dotsOptions: any;
+  cornersSquareOptions: any;
+  cornersDotOptions: any;
 }
