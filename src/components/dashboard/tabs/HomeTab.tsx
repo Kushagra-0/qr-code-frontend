@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
-import { ArrowRight, Calendar, Link } from "react-feather";
+import { ArrowRight, Calendar } from "react-feather";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
 import CustomQRCode from '../../qrCodes/CustomQRCode';
@@ -21,14 +21,9 @@ const HomeTab = () => {
         try {
             setLoading(true);
             const res = await fetch(`${baseUrl}/qrcodes/user`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-            if (!res.ok) {
-                throw new Error("Failed to fetch QR codes");
-            }
-
+            if (!res.ok) throw new Error("Failed to fetch QR codes");
             const data = await res.json();
             setQrCodes(data);
         } catch (err) {
@@ -50,9 +45,7 @@ const HomeTab = () => {
         if (!token) return;
         try {
             const res = await fetch(`${baseUrl}/qrcodes/user/analytics`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
             if (!res.ok) throw new Error("Failed to fetch scan analytics");
             const data = await res.json();
@@ -67,9 +60,6 @@ const HomeTab = () => {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
         .slice(0, 3);
 
-    // if (authLoading || loading) return <p>Loading QR codes...</p>;
-    //   if (error) return <p className="text-red-500">{error}</p>;
-
     const scanChartData = Object.entries(scanAnalytics).map(([date, count]) => ({
         date,
         scans: count,
@@ -78,35 +68,27 @@ const HomeTab = () => {
     if (authLoading || loading || error) {
         return (
             <div className="w-full h-full flex flex-col">
-                {/* Header skeleton */}
                 <div className="flex justify-end items-center mb-5 shrink-0">
                     <Skeleton className="h-12 w-40 rounded-2xl" />
                 </div>
-
-                <div className="grid grid-cols-2 gap-6 grow">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 grow">
                     {/* Left Section Skeleton */}
-                    <div className="grid grid-cols-2 grid-rows-6 gap-6">
-                        {/* Total Scans box */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 grid-rows-6 gap-6">
                         <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6 flex flex-col">
                             <Skeleton className="h-6 w-1/3 mb-4" />
                             <Skeleton className="h-12 w-1/2" />
                         </div>
-
-                        {/* Blog Article box */}
                         <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6">
                             <Skeleton className="h-6 w-1/2 mb-4" />
                             <Skeleton className="h-4 w-3/4" />
                             <Skeleton className="h-4 w-2/3 mt-2" />
                         </div>
-
-                        {/* Scans over time chart box */}
-                        <div className="col-span-2 row-span-4 bg-white rounded-xl shadow px-6 py-6">
+                        <div className="col-span-1 sm:col-span-2 row-span-4 bg-white rounded-xl shadow px-6 py-6">
                             <Skeleton className="h-6 w-1/4 mb-6" />
                             <Skeleton className="h-48 w-full" />
                         </div>
                     </div>
-
-                    {/* Right Section Skeleton (Recent QRs) */}
+                    {/* Right Section Skeleton */}
                     <div className="flex flex-col gap-6">
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="bg-white rounded-xl shadow px-6 py-4 relative">
@@ -129,49 +111,31 @@ const HomeTab = () => {
         );
     }
 
-
     return (
         <div className="w-full h-full flex flex-col">
             {/* Header */}
             <div className="flex justify-end items-center mb-5 shrink-0">
-                {/* <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-xl px-2 py-1">
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="px-2 py-1 text-lg bg-transparent focus:outline-none"
-                    />
-                    <Search size={20} className="text-gray-500 mr-2" />
-                </div> */}
                 <button
                     onClick={() => navigate("/qrcodes/create")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-3xl font-semibold px-4 py-2 rounded-2xl shadow-[0_0_20px_rgba(100,100,100,0.5)] cursor-pointer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white text-lg sm:text-xl md:text-2xl font-semibold px-4 py-2 rounded-2xl shadow-[0_0_20px_rgba(100,100,100,0.5)] cursor-pointer"
                 >
                     CREATE NEW
                 </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-6 grow">
+            <div className="overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 grow">
                 {/* Left Section */}
                 <div className="grid grid-cols-2 grid-rows-6 gap-6">
-                    {/* Total Scans */}
                     <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6">
-                        <p className="text-2xl font-semibold">TOTAL SCANS</p>
-                        <p className="text-6xl mt-4 font-bold">{totalScans}</p>
+                        <p className="text-xl sm:text-2xl font-semibold">TOTAL SCANS</p>
+                        <p className="text-4xl sm:text-6xl mt-4 font-bold">{totalScans}</p>
                     </div>
-
-                    {/* Blog Article */}
                     <div className="row-span-2 bg-white rounded-xl shadow px-6 py-6">
-                        <p className="text-2xl font-semibold text-gray-700 mb-1">LATEST BLOG</p>
+                        <p className="text-xl sm:text-2xl font-semibold text-gray-700 mb-1">LATEST BLOG</p>
                     </div>
-
-                    <div className="col-span-2 row-span-4 bg-white rounded-xl max-h-[93%] shadow px-6 py-6">
-                        {/* <p className="text-2xl font-semibold text-gray-700 mb-4">Recent Blog Article</p>
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">How QR Codes Are Transforming Marketing</h3>
-                        <p className="text-gray-600 mb-4">Explore how businesses are leveraging QR codes to streamline user engagement and track campaign success.</p> */}
-                        <p className="text-2xl font-semibold text-gray-700 mb-2">Scans Over Time</p>
-                        <ResponsiveContainer width="90%" height={230} className="mt-6">
+                    <div className="col-span-2 row-span-4 bg-white rounded-xl shadow px-6 py-6">
+                        <p className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2">Scans Over Time</p>
+                        <ResponsiveContainer width="100%" height={230} className="mt-6">
                             <LineChart data={scanChartData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="date" />
@@ -181,66 +145,48 @@ const HomeTab = () => {
                             </LineChart>
                         </ResponsiveContainer>
                     </div>
-                    {/* <div className="col-span-2 row-span-4 bg-white rounded-xl shadow px-4 py-4">
-                        <p className="text-2xl font-semibold text-gray-700 mb-2">Scans Over Time</p>
-                        <ResponsiveContainer width="100%" height={200}>
-                            <LineChart data={scanChartData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Line type="monotone" dataKey="scans" stroke="#8884d8" strokeWidth={2} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div> */}
                 </div>
 
-                {/* Right Section (Recent QR Codes) */}
-                <div className="flex flex-col gap-6 overflow-visible">
+                {/* Right Section */}
+                <div className="flex flex-col gap-6">
                     {recentQrs.length === 0 ? (
-                        // <p>No recent QR codes found.</p>
                         <></>
                     ) : (
                         recentQrs.map((qr) => (
-                            <div
-                                key={qr._id}
-                                className="bg-white rounded-xl shadow px-6 py-4 relative"
-                            >
-                                {/* Content area with padding-bottom to avoid overlap with button */}
-                                <div className="pr-6">
-                                    <div className="flex flex-row my-2">
-                                        <div className='border'>
-                                            <CustomQRCode
-                                                data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
-                                                size={100}
-                                                margin={-1}
-                                                backgroundOptions={qr.backgroundOptions}
-                                                dotsOptions={qr.dotsOptions}
-                                                cornersSquareOptions={qr.cornersSquareOptions}
-                                                cornersDotOptions={qr.cornersDotOptions}
-                                            />
-                                        </div>
-                                        <div className="mx-4 flex-1 overflow-hidden">
-                                            <p className="text-xl text-gray-600 mt-2 break-words line-clamp-2">{qr.name ? qr.name : <span className='text-gray-300'>No Name</span>}</p>
-                                            <div className="flex flex-row gap-2 text-gray-400 mt-1">
-                                                <Calendar size={14} className="mt-1.5" />
-                                                <div>
-                                                    {new Date(qr.createdAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
-                                                </div>
+                            <div key={qr._id} className="bg-white rounded-xl shadow px-4 sm:px-6 py-4 relative">
+                                <div className="flex flex-row my-2">
+                                    <div className="border self-center sm:self-auto">
+                                        <CustomQRCode
+                                            data={qr.isDynamic ? `${window.location.origin}/qr/${qr.shortCode}` : qr.content}
+                                            size={100}
+                                            margin={-1}
+                                            image={qr.image}
+                                            backgroundOptions={qr.backgroundOptions}
+                                            dotsOptions={qr.dotsOptions}
+                                            cornersSquareOptions={qr.cornersSquareOptions}
+                                            cornersDotOptions={qr.cornersDotOptions}
+                                        />
+                                    </div>
+                                    <div className="mx-4 flex-1 overflow-hidden mt-0">
+                                        <p className="text-lg sm:text-xl text-gray-600 break-words line-clamp-2">
+                                            {qr.name ? qr.name : <span className="text-gray-300">No Name</span>}
+                                        </p>
+                                        <div className="flex flex-row gap-2 text-gray-400 mt-1 text-sm sm:text-base">
+                                            <Calendar size={14} className="mt-1.5" />
+                                            <div>
+                                                {new Date(qr.createdAt).toLocaleDateString("en-US", {
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    year: "numeric",
+                                                })}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Bottom-right button absolutely placed */}
                                 <div className="absolute bottom-4 right-4">
                                     <button
                                         onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                        className="text-blue-600 flex font-bold px-4 py-2 cursor-pointer rounded-xl border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] transition-shadow text-sm"
+                                        className="text-blue-600 flex font-bold px-2 sm:px-4 py-2 cursor-pointer rounded-xl border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] transition-shadow text-xs sm:text-sm"
                                     >
                                         DETAILS
                                         <div className="mt-0.5 ml-1">

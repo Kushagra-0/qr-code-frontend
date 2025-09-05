@@ -14,6 +14,11 @@ import WhatsappForm from "./helperForms/WhatsappForm";
 import LocationForm from "./helperForms/LocationForm";
 import UpiForm from "./helperForms/UpiForm";
 import ColorPicker from "../../common/ColorPicker";
+import UploadImage from "../../common/UploadImage";
+import PdfForm from "./helperForms/PdfForm";
+import AudioForm from "./helperForms/AudioForm";
+import ImageForm from "./helperForms/ImageForm";
+import TextForm from "./helperForms/TextForm";
 
 const CreateQrCodeForm = () => {
   const { token } = useAuth();
@@ -25,6 +30,7 @@ const CreateQrCodeForm = () => {
   const [qrType, setQrType] = useState("URL");
   const [typeData, setTypeData] = useState<any>({})
 
+  const [image, setImage] = useState<any>(null);
   const [isBackgroundGradient, setIsBackgroundGradient] = useState(false)
   const [backgroundOptions, setBackgroundOptions] = useState<any>({
     color: "#ffffff",
@@ -131,6 +137,7 @@ const CreateQrCodeForm = () => {
         body: JSON.stringify({
           name,
           typeData,
+          image,
           backgroundOptions,
           dotsOptions,
           cornersSquareOptions,
@@ -191,8 +198,20 @@ const CreateQrCodeForm = () => {
             <UrlForm typeData={typeData} setTypeData={setTypeData} />
           )}
 
+          {qrType === "IMAGE" && (
+            <ImageForm typeData={typeData} setTypeData={setTypeData} />
+          )}
+
           {qrType === "EMAIL" && (
             <EmailForm typeData={typeData} setTypeData={setTypeData} />
+          )}
+
+          {qrType === "PDF" && (
+            <PdfForm typeData={typeData} setTypeData={setTypeData} />
+          )}
+
+          {qrType === "TEXT" && (
+            <TextForm typeData={typeData} setTypeData={setTypeData} />
           )}
 
           {qrType === "SMS" && (
@@ -202,6 +221,8 @@ const CreateQrCodeForm = () => {
           {qrType === "PHONE" && (
             <PhoneForm typeData={typeData} setTypeData={setTypeData} />
           )}
+
+
 
           {qrType === "YOUTUBE" && (
             <YoutubeForm typeData={typeData} setTypeData={setTypeData} />
@@ -217,6 +238,12 @@ const CreateQrCodeForm = () => {
 
           {qrType === "UPI" && (
             <UpiForm typeData={typeData} setTypeData={setTypeData} />
+          )}
+
+
+
+          {qrType === "AUDIO" && (
+            <AudioForm typeData={typeData} setTypeData={setTypeData} />
           )}
 
           <div className="flex justify-between mt-6">
@@ -262,6 +289,7 @@ const CreateQrCodeForm = () => {
                 data={createdQRCode?.isDynamic ? `${window.location.origin}/qr/${createdQRCode?.shortCode}` : "xcvb"}
                 size={220}
                 margin={-1}
+                image={image}
                 backgroundOptions={backgroundOptions}
                 dotsOptions={dotsOptions}
                 cornersSquareOptions={cornersSquareOptions}
@@ -323,8 +351,20 @@ const CreateQrCodeForm = () => {
                     <UrlForm typeData={typeData} setTypeData={setTypeData} />
                   )}
 
+                  {qrType === "IMAGE" && (
+                    <ImageForm typeData={typeData} setTypeData={setTypeData} />
+                  )}
+
                   {qrType === "EMAIL" && (
                     <EmailForm typeData={typeData} setTypeData={setTypeData} />
+                  )}
+
+                  {qrType === "PDF" && (
+                    <PdfForm typeData={typeData} setTypeData={setTypeData} />
+                  )}
+
+                  {qrType === "TEXT" && (
+                    <TextForm typeData={typeData} setTypeData={setTypeData} />
                   )}
 
                   {qrType === "SMS" && (
@@ -334,6 +374,8 @@ const CreateQrCodeForm = () => {
                   {qrType === "PHONE" && (
                     <PhoneForm typeData={typeData} setTypeData={setTypeData} />
                   )}
+
+
 
                   {qrType === "YOUTUBE" && (
                     <YoutubeForm typeData={typeData} setTypeData={setTypeData} />
@@ -350,6 +392,12 @@ const CreateQrCodeForm = () => {
                   {qrType === "UPI" && (
                     <UpiForm typeData={typeData} setTypeData={setTypeData} />
                   )}
+
+
+
+                  {qrType === "AUDIO" && (
+                    <AudioForm typeData={typeData} setTypeData={setTypeData} />
+                  )}
                 </div>
               </div>
             )}
@@ -357,11 +405,13 @@ const CreateQrCodeForm = () => {
             {selectedTab === "styles" && (
               <div>
                 <div className="mt-8">
+                  {/* <UploadLogo onUpload={(url:any) => setLogo(url)} /> */}
+                  <UploadImage onUpload={(url: any) => setImage(url)} />
                   <div className="block text-sm font-medium text-gray-700 mb-2">QR Colors</div>
                   <div className="flex flex-row gap-4 mt-2">
 
-                    <div className="border p-2 rounded-lg">
-                      <label className="block text-gray-700 font-semibold text-xs">Code Color</label>
+                    <div className="bg-white p-4 rounded-2xl w-1/2">
+                      <label className="block text-gray-700 font-semibold text-xs mb-3">Code Color</label>
 
                       {/* Solid / Gradient Toggle */}
                       <div className="flex items-center gap-6 mb-4">
@@ -519,25 +569,29 @@ const CreateQrCodeForm = () => {
                         </>
                         :
                         <>
-                          <input
-                            value={dotsOptions.color}
-                            onChange={(e) =>
-                              setDotsOptions({ ...dotsOptions, color: e.target.value, gradient: undefined })
-                            }
-                            className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
-                          />
-                          <ColorPicker
-                            color={dotsOptions.color}
-                            onChange={(c) =>
-                              setDotsOptions({ ...dotsOptions, color: c, gradient: undefined })
-                            }
-                          />
+                          <div className="border p-2 rounded-lg w-1/2">
+                            <label className="block text-gray-700 font-semibold text-xs">Code Color</label>
+                            <input
+                              value={dotsOptions.color}
+                              onChange={(e) =>
+                                setDotsOptions({ ...dotsOptions, color: e.target.value, gradient: undefined })
+                              }
+                              className="outline-none focus:ring-0 focus:border-transparent w-36 uppercase"
+                            />
+                            <ColorPicker
+                              color={dotsOptions.color}
+                              onChange={(c) =>
+                                setDotsOptions({ ...dotsOptions, color: c, gradient: undefined })
+                              }
+                            />
+                          </div>
+
                         </>
                       }
                     </div>
 
 
-                    <div>
+                    <div className="bg-white p-4 rounded-2xl w-1/2">
                       <div className="block text-sm font-medium text-gray-700 mb-2">QR Background</div>
 
                       {/* Toggle Solid / Gradient */}
@@ -686,7 +740,7 @@ const CreateQrCodeForm = () => {
                         </>
                         :
                         <>
-                          <div className="border p-2 rounded-lg">
+                          <div className="border p-2 rounded-lg w-1/2">
                             <label className="block text-gray-700 font-semibold text-xs">Background Color</label>
                             <input
                               value={backgroundOptions.color}
@@ -722,7 +776,7 @@ const CreateQrCodeForm = () => {
                         className={`p-2 rounded-lg border-2 ${dotsOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                       >
                         <div className="bg-white p-2">
-                          <img src={style.icon} alt={style.label} className="w-13 h-13" />
+                          <img src={style.icon} alt={style.label} className="w-28 h-28" />
                         </div>
                       </button>
                     ))}
@@ -750,179 +804,182 @@ const CreateQrCodeForm = () => {
                             className={`p-2 rounded-lg border-2 ${cornersSquareOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                           >
                             <div className="bg-white p-2">
-                              <img src={style.icon} alt={style.label} className="w-13 h-13" />
+                              <img src={style.icon} alt={style.label} className="w-28 h-28" />
                             </div>
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 mb-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={!isCornersSquareGradient}
-                          onChange={() => {
-                            setIsCornersSquareGradient(false);
-                            setCornersSquareOptions({
-                              ...cornersSquareOptions,
-                              gradient: undefined,
-                              color: "#000000"
-                            });
-                          }}
-                        />
-                        <span>Solid</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={isCornersSquareGradient}
-                          onChange={() => {
-                            setIsCornersSquareGradient(true);
-                            setCornersSquareOptions({
-                              ...cornersSquareOptions,
-                              color: undefined,
-                              gradient: {
-                                type: "linear",
-                                rotation: 0,
-                                colorStops: [
-                                  { offset: 0, color: "#000000" },
-                                  { offset: 1, color: "#000000" }
-                                ]
-                              }
-                            });
-                          }}
-                        />
-                        <span>Gradient</span>
-                      </label>
-                    </div>
-
-                    {isCornersSquareGradient ? (
-                      <>
-                        {/* Gradient picker UI — same structure as dotsOptions */}
-                        <div className="flex gap-4">
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Start Color</label>
-                            <input
-                              value={cornersSquareOptions.gradient.colorStops[0].color}
-                              onChange={(e) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: {
-                                    ...cornersSquareOptions.gradient,
-                                    colorStops: [
-                                      { ...cornersSquareOptions.gradient.colorStops[0], color: e.target.value },
-                                      cornersSquareOptions.gradient.colorStops[1]
-                                    ]
-                                  }
-                                })
-                              }
-                              className="outline-none w-36 uppercase"
-                            />
-                            <ColorPicker
-                              color={cornersSquareOptions.gradient.colorStops[0].color}
-                              onChange={(c) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: {
-                                    ...cornersSquareOptions.gradient,
-                                    colorStops: [
-                                      { ...cornersSquareOptions.gradient.colorStops[0], color: c },
-                                      cornersSquareOptions.gradient.colorStops[1]
-                                    ]
-                                  }
-                                })
-                              }
-                            />
-                          </div>
-
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">End Color</label>
-                            <input
-                              value={cornersSquareOptions.gradient.colorStops[1].color}
-                              onChange={(e) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: {
-                                    ...cornersSquareOptions.gradient,
-                                    colorStops: [
-                                      cornersSquareOptions.gradient.colorStops[0],
-                                      { ...cornersSquareOptions.gradient.colorStops[1], color: e.target.value }
-                                    ]
-                                  }
-                                })
-                              }
-                              className="outline-none w-36 uppercase"
-                            />
-                            <ColorPicker
-                              color={cornersSquareOptions.gradient.colorStops[1].color}
-                              onChange={(c) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: {
-                                    ...cornersSquareOptions.gradient,
-                                    colorStops: [
-                                      cornersSquareOptions.gradient.colorStops[0],
-                                      { ...cornersSquareOptions.gradient.colorStops[1], color: c }
-                                    ]
-                                  }
-                                })
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex gap-4 mt-4">
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Gradient Type</label>
-                            <select
-                              value={cornersSquareOptions.gradient.type}
-                              onChange={(e) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: { ...cornersSquareOptions.gradient, type: e.target.value as "linear" | "radial" }
-                                })
-                              }
-                              className="border rounded px-2 py-1"
-                            >
-                              <option value="linear">Linear</option>
-                              <option value="radial">Radial</option>
-                            </select>
-                          </div>
-
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Rotation</label>
-                            <input
-                              type="number"
-                              value={cornersSquareOptions.gradient.rotation}
-                              onChange={(e) =>
-                                setCornersSquareOptions({
-                                  ...cornersSquareOptions,
-                                  gradient: { ...cornersSquareOptions.gradient, rotation: Number(e.target.value) }
-                                })
-                              }
-                              className="border rounded px-2 py-1 w-24"
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="border p-2 rounded-lg">
-                        <label className="block text-gray-700 font-semibold text-xs">Square Color</label>
-                        <input
-                          value={cornersSquareOptions.color}
-                          onChange={(e) => setCornersSquareOptions({ ...cornersSquareOptions, color: e.target.value, gradient: undefined })}
-                          className="outline-none w-36 uppercase"
-                        />
-                        <ColorPicker
-                          color={cornersSquareOptions.color}
-                          onChange={(c) => setCornersSquareOptions({ ...cornersSquareOptions, color: c, gradient: undefined })}
-                        />
+                    <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                      <div className="block text-sm font-medium text-gray-700 mb-2">Square Color</div>
+                      <div className="flex items-center gap-6 mb-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            checked={!isCornersSquareGradient}
+                            onChange={() => {
+                              setIsCornersSquareGradient(false);
+                              setCornersSquareOptions({
+                                ...cornersSquareOptions,
+                                gradient: undefined,
+                                color: "#000000"
+                              });
+                            }}
+                          />
+                          <span>Solid</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            checked={isCornersSquareGradient}
+                            onChange={() => {
+                              setIsCornersSquareGradient(true);
+                              setCornersSquareOptions({
+                                ...cornersSquareOptions,
+                                color: undefined,
+                                gradient: {
+                                  type: "linear",
+                                  rotation: 0,
+                                  colorStops: [
+                                    { offset: 0, color: "#000000" },
+                                    { offset: 1, color: "#000000" }
+                                  ]
+                                }
+                              });
+                            }}
+                          />
+                          <span>Gradient</span>
+                        </label>
                       </div>
-                    )}
+
+                      {isCornersSquareGradient ? (
+                        <>
+                          {/* Gradient picker UI — same structure as dotsOptions */}
+                          <div className="flex gap-4">
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Start Color</label>
+                              <input
+                                value={cornersSquareOptions.gradient.colorStops[0].color}
+                                onChange={(e) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: {
+                                      ...cornersSquareOptions.gradient,
+                                      colorStops: [
+                                        { ...cornersSquareOptions.gradient.colorStops[0], color: e.target.value },
+                                        cornersSquareOptions.gradient.colorStops[1]
+                                      ]
+                                    }
+                                  })
+                                }
+                                className="outline-none w-36 uppercase"
+                              />
+                              <ColorPicker
+                                color={cornersSquareOptions.gradient.colorStops[0].color}
+                                onChange={(c) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: {
+                                      ...cornersSquareOptions.gradient,
+                                      colorStops: [
+                                        { ...cornersSquareOptions.gradient.colorStops[0], color: c },
+                                        cornersSquareOptions.gradient.colorStops[1]
+                                      ]
+                                    }
+                                  })
+                                }
+                              />
+                            </div>
+
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">End Color</label>
+                              <input
+                                value={cornersSquareOptions.gradient.colorStops[1].color}
+                                onChange={(e) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: {
+                                      ...cornersSquareOptions.gradient,
+                                      colorStops: [
+                                        cornersSquareOptions.gradient.colorStops[0],
+                                        { ...cornersSquareOptions.gradient.colorStops[1], color: e.target.value }
+                                      ]
+                                    }
+                                  })
+                                }
+                                className="outline-none w-36 uppercase"
+                              />
+                              <ColorPicker
+                                color={cornersSquareOptions.gradient.colorStops[1].color}
+                                onChange={(c) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: {
+                                      ...cornersSquareOptions.gradient,
+                                      colorStops: [
+                                        cornersSquareOptions.gradient.colorStops[0],
+                                        { ...cornersSquareOptions.gradient.colorStops[1], color: c }
+                                      ]
+                                    }
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex gap-4 mt-4">
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Gradient Type</label>
+                              <select
+                                value={cornersSquareOptions.gradient.type}
+                                onChange={(e) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: { ...cornersSquareOptions.gradient, type: e.target.value as "linear" | "radial" }
+                                  })
+                                }
+                                className="border rounded px-2 py-1"
+                              >
+                                <option value="linear">Linear</option>
+                                <option value="radial">Radial</option>
+                              </select>
+                            </div>
+
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Rotation</label>
+                              <input
+                                type="number"
+                                value={cornersSquareOptions.gradient.rotation}
+                                onChange={(e) =>
+                                  setCornersSquareOptions({
+                                    ...cornersSquareOptions,
+                                    gradient: { ...cornersSquareOptions.gradient, rotation: Number(e.target.value) }
+                                  })
+                                }
+                                className="border rounded px-2 py-1 w-24"
+                              />
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="border p-2 rounded-lg w-1/2">
+                          <label className="block text-gray-700 font-semibold text-xs">Square Color</label>
+                          <input
+                            value={cornersSquareOptions.color}
+                            onChange={(e) => setCornersSquareOptions({ ...cornersSquareOptions, color: e.target.value, gradient: undefined })}
+                            className="outline-none w-36 uppercase"
+                          />
+                          <ColorPicker
+                            color={cornersSquareOptions.color}
+                            onChange={(c) => setCornersSquareOptions({ ...cornersSquareOptions, color: c, gradient: undefined })}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex flex-row mt-4">
+                  <div className="flex flex-col mt-4">
                     <div>
                       <label className="block text-gray-700 font-semibold mb-1 text-xs">Dot Style</label>
                       <div className="flex gap-4">
@@ -941,176 +998,179 @@ const CreateQrCodeForm = () => {
                             className={`p-2 rounded-lg border-2 ${cornersDotOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                           >
                             <div className="bg-white p-2">
-                              <img src={style.icon} alt={style.label} className="w-13 h-13" />
+                              <img src={style.icon} alt={style.label} className="w-28 h-28" />
                             </div>
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 mb-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={!isCornersDotGradient}
-                          onChange={() => {
-                            setIsCornersDotGradient(false);
-                            setCornersDotOptions({
-                              ...cornersDotOptions,
-                              gradient: undefined,
-                              color: "#000000"
-                            });
-                          }}
-                        />
-                        <span>Solid</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          checked={isCornersDotGradient}
-                          onChange={() => {
-                            setIsCornersDotGradient(true);
-                            setCornersDotOptions({
-                              ...cornersDotOptions,
-                              color: undefined,
-                              gradient: {
-                                type: "linear",
-                                rotation: 0,
-                                colorStops: [
-                                  { offset: 0, color: "#000000" },
-                                  { offset: 1, color: "#000000" }
-                                ]
-                              }
-                            });
-                          }}
-                        />
-                        <span>Gradient</span>
-                      </label>
-                    </div>
-
-                    {isCornersDotGradient ? (
-                      <>
-                        {/* Gradient picker UI — same structure as dotsOptions */}
-                        <div className="flex gap-4">
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Start Color</label>
-                            <input
-                              value={cornersDotOptions.gradient.colorStops[0].color}
-                              onChange={(e) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: {
-                                    ...cornersDotOptions.gradient,
-                                    colorStops: [
-                                      { ...cornersDotOptions.gradient.colorStops[0], color: e.target.value },
-                                      cornersDotOptions.gradient.colorStops[1]
-                                    ]
-                                  }
-                                })
-                              }
-                              className="outline-none w-36 uppercase"
-                            />
-                            <ColorPicker
-                              color={cornersDotOptions.gradient.colorStops[0].color}
-                              onChange={(c) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: {
-                                    ...cornersDotOptions.gradient,
-                                    colorStops: [
-                                      { ...cornersDotOptions.gradient.colorStops[0], color: c },
-                                      cornersDotOptions.gradient.colorStops[1]
-                                    ]
-                                  }
-                                })
-                              }
-                            />
-                          </div>
-
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">End Color</label>
-                            <input
-                              value={cornersDotOptions.gradient.colorStops[1].color}
-                              onChange={(e) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: {
-                                    ...cornersDotOptions.gradient,
-                                    colorStops: [
-                                      cornersDotOptions.gradient.colorStops[0],
-                                      { ...cornersDotOptions.gradient.colorStops[1], color: e.target.value }
-                                    ]
-                                  }
-                                })
-                              }
-                              className="outline-none w-36 uppercase"
-                            />
-                            <ColorPicker
-                              color={cornersDotOptions.gradient.colorStops[1].color}
-                              onChange={(c) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: {
-                                    ...cornersDotOptions.gradient,
-                                    colorStops: [
-                                      cornersDotOptions.gradient.colorStops[0],
-                                      { ...cornersDotOptions.gradient.colorStops[1], color: c }
-                                    ]
-                                  }
-                                })
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex gap-4 mt-4">
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Gradient Type</label>
-                            <select
-                              value={cornersDotOptions.gradient.type}
-                              onChange={(e) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: { ...cornersDotOptions.gradient, type: e.target.value as "linear" | "radial" }
-                                })
-                              }
-                              className="border rounded px-2 py-1"
-                            >
-                              <option value="linear">Linear</option>
-                              <option value="radial">Radial</option>
-                            </select>
-                          </div>
-
-                          <div className="border p-2 rounded-lg">
-                            <label className="block text-gray-700 font-semibold text-xs">Rotation</label>
-                            <input
-                              type="number"
-                              value={cornersDotOptions.gradient.rotation}
-                              onChange={(e) =>
-                                setCornersDotOptions({
-                                  ...cornersDotOptions,
-                                  gradient: { ...cornersDotOptions.gradient, rotation: Number(e.target.value) }
-                                })
-                              }
-                              className="border rounded px-2 py-1 w-24"
-                            />
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="border p-2 rounded-lg">
-                        <label className="block text-gray-700 font-semibold text-xs">Dot Color</label>
-                        <input
-                          value={cornersDotOptions.color}
-                          onChange={(e) => setCornersDotOptions({ ...cornersDotOptions, color: e.target.value, gradient: undefined })}
-                          className="outline-none w-36 uppercase"
-                        />
-                        <ColorPicker
-                          color={cornersDotOptions.color}
-                          onChange={(c) => setCornersDotOptions({ ...cornersDotOptions, color: c, gradient: undefined })}
-                        />
+                    <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                      <div className="block text-sm font-medium text-gray-700 mb-2">Dot Color</div>
+                      <div className="flex items-center gap-6 mb-4">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            checked={!isCornersDotGradient}
+                            onChange={() => {
+                              setIsCornersDotGradient(false);
+                              setCornersDotOptions({
+                                ...cornersDotOptions,
+                                gradient: undefined,
+                                color: "#000000"
+                              });
+                            }}
+                          />
+                          <span>Solid</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            checked={isCornersDotGradient}
+                            onChange={() => {
+                              setIsCornersDotGradient(true);
+                              setCornersDotOptions({
+                                ...cornersDotOptions,
+                                color: undefined,
+                                gradient: {
+                                  type: "linear",
+                                  rotation: 0,
+                                  colorStops: [
+                                    { offset: 0, color: "#000000" },
+                                    { offset: 1, color: "#000000" }
+                                  ]
+                                }
+                              });
+                            }}
+                          />
+                          <span>Gradient</span>
+                        </label>
                       </div>
-                    )}
+
+                      {isCornersDotGradient ? (
+                        <>
+                          {/* Gradient picker UI — same structure as dotsOptions */}
+                          <div className="flex gap-4">
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Start Color</label>
+                              <input
+                                value={cornersDotOptions.gradient.colorStops[0].color}
+                                onChange={(e) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: {
+                                      ...cornersDotOptions.gradient,
+                                      colorStops: [
+                                        { ...cornersDotOptions.gradient.colorStops[0], color: e.target.value },
+                                        cornersDotOptions.gradient.colorStops[1]
+                                      ]
+                                    }
+                                  })
+                                }
+                                className="outline-none w-36 uppercase"
+                              />
+                              <ColorPicker
+                                color={cornersDotOptions.gradient.colorStops[0].color}
+                                onChange={(c) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: {
+                                      ...cornersDotOptions.gradient,
+                                      colorStops: [
+                                        { ...cornersDotOptions.gradient.colorStops[0], color: c },
+                                        cornersDotOptions.gradient.colorStops[1]
+                                      ]
+                                    }
+                                  })
+                                }
+                              />
+                            </div>
+
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">End Color</label>
+                              <input
+                                value={cornersDotOptions.gradient.colorStops[1].color}
+                                onChange={(e) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: {
+                                      ...cornersDotOptions.gradient,
+                                      colorStops: [
+                                        cornersDotOptions.gradient.colorStops[0],
+                                        { ...cornersDotOptions.gradient.colorStops[1], color: e.target.value }
+                                      ]
+                                    }
+                                  })
+                                }
+                                className="outline-none w-36 uppercase"
+                              />
+                              <ColorPicker
+                                color={cornersDotOptions.gradient.colorStops[1].color}
+                                onChange={(c) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: {
+                                      ...cornersDotOptions.gradient,
+                                      colorStops: [
+                                        cornersDotOptions.gradient.colorStops[0],
+                                        { ...cornersDotOptions.gradient.colorStops[1], color: c }
+                                      ]
+                                    }
+                                  })
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex gap-4 mt-4">
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Gradient Type</label>
+                              <select
+                                value={cornersDotOptions.gradient.type}
+                                onChange={(e) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: { ...cornersDotOptions.gradient, type: e.target.value as "linear" | "radial" }
+                                  })
+                                }
+                                className="border rounded px-2 py-1"
+                              >
+                                <option value="linear">Linear</option>
+                                <option value="radial">Radial</option>
+                              </select>
+                            </div>
+
+                            <div className="border p-2 rounded-lg">
+                              <label className="block text-gray-700 font-semibold text-xs">Rotation</label>
+                              <input
+                                type="number"
+                                value={cornersDotOptions.gradient.rotation}
+                                onChange={(e) =>
+                                  setCornersDotOptions({
+                                    ...cornersDotOptions,
+                                    gradient: { ...cornersDotOptions.gradient, rotation: Number(e.target.value) }
+                                  })
+                                }
+                                className="border rounded px-2 py-1 w-24"
+                              />
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="border p-2 rounded-lg w-1/2">
+                          <label className="block text-gray-700 font-semibold text-xs">Dot Color</label>
+                          <input
+                            value={cornersDotOptions.color}
+                            onChange={(e) => setCornersDotOptions({ ...cornersDotOptions, color: e.target.value, gradient: undefined })}
+                            className="outline-none w-36 uppercase"
+                          />
+                          <ColorPicker
+                            color={cornersDotOptions.color}
+                            onChange={(c) => setCornersDotOptions({ ...cornersDotOptions, color: c, gradient: undefined })}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

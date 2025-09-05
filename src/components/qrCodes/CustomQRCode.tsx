@@ -1,5 +1,6 @@
 import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import QRCodeStyling from "qr-code-styling";
+import jsPDF from "jspdf";
 
 export interface CustomQRCodeHandle {
     download: (extension: "png" | "jpg" | "svg" | "pdf") => Promise<void>;
@@ -10,10 +11,7 @@ interface CustomQRCodeProps {
     margin?: number;
     size?: number;
     style?: React.CSSProperties;
-    cornersSquareType?: 'dot' | 'square' | 'extra-rounded' | 'rounded' | 'dots' | 'classy' | 'classy-rounded';
-    cornersSquareColor?: string;
-    cornersDotType?: 'dot' | 'square' | 'rounded' | 'dots' | 'classy' | 'classy-rounded' | 'extra-rounded';
-    cornersDotColor?: string;
+    image?: string;
     backgroundOptions?: {
         color?: string;
         gradient?: {
@@ -56,10 +54,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
     size = 100,
     style,
     margin = 0,
-    cornersSquareType = "square",
-    cornersSquareColor = "#000000",
-    cornersDotType = "square",
-    cornersDotColor = "#000000",
+    image,
     backgroundOptions,
     dotsOptions,
     cornersSquareOptions,
@@ -76,6 +71,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             margin,
             data,
             type: "svg",
+            image: image || undefined,
             backgroundOptions: backgroundOptions,
             dotsOptions: dotsOptions,
             cornersSquareOptions: cornersSquareOptions,
@@ -86,7 +82,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             qrCode.current.append(divRef.current);
         }
 
-        return () => {  
+        return () => {
             if (divRef.current) divRef.current.innerHTML = "";
         };
     }, []); // Init only once
@@ -99,13 +95,14 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                 width: size,
                 height: size,
                 margin,
+                image: image,
                 backgroundOptions: backgroundOptions,
                 dotsOptions: dotsOptions,
                 cornersSquareOptions: cornersSquareOptions,
                 cornersDotOptions: cornersDotOptions
             });
         }
-    }, [data, size, margin, backgroundOptions, dotsOptions, cornersSquareOptions, cornersDotOptions, cornersSquareType, cornersSquareColor, cornersDotType, cornersDotColor]);
+    }, [data, size, margin, image, backgroundOptions, dotsOptions, cornersSquareOptions, cornersDotOptions]);
 
     // Expose download method via ref
     useImperativeHandle(ref, () => ({
@@ -138,38 +135,49 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                         break;
 
                     case "pdf":
-                        // For PDF, we need to create it manually since QRCodeStyling doesn't support PDF directly
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        if (!ctx) return;
+                        // Check for browser compatibility
+                        if (!window.Blob || !window.URL || !window.URL.createObjectURL) {
+                            console.error("Browser does not support required APIs for PDF generation");
+                            throw new Error("Browser does not support PDF generation");
+                        }
 
-                        // Set high DPI for better quality
-                        const dpi = 300;
-                        const scaleFactor = dpi / 96; // 96 DPI is default
-                        const scaledSize = size * scaleFactor;
+                        // Get QR code as PNG Blob
+                        const pngBlob = await qrCode.current.getRawData("png");
+                        if (!pngBlob) {
+                            console.error("Failed to generate QR code PNG data");
+                            throw new Error("Failed to generate QR code image");
+                        }
 
-                        canvas.width = scaledSize;
-                        canvas.height = scaledSize;
+                        try {
+                            // Convert Blob to data URL
+                            const pngDataUrl = await new Promise<string>((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = () => resolve(reader.result as string);
+                                reader.onerror = () => reject(new Error("Failed to read PNG data"));
+                                reader.readAsDataURL(pngBlob);
+                            });
 
-                        // Scale the context to match the DPI
-                        ctx.scale(scaleFactor, scaleFactor);
+                            // Create new jsPDF instance
+                            const pdf = new jsPDF({
+                                orientation: "portrait",
+                                unit: "px",
+                                format: [size + margin * 2, size + margin * 2]
+                            });
 
-                        // await qrCode.current.drawCanvas(ctx);
+                            // Add QR code image to PDF
+                            pdf.addImage(pngDataUrl, "PNG", margin, margin, size, size);
 
-                        const dataUrl = canvas.toDataURL('image/png');
-
-                        // Dynamically import jsPDF to avoid bundle issues
-                        const { default: jsPDF } = await import('jspdf');
-
-                        const sizeInMm = 100; // 100mm x 100mm
-                        const pdf = new jsPDF({
-                            orientation: "portrait",
-                            unit: "mm",
-                            format: [sizeInMm, sizeInMm],
-                        });
-
-                        pdf.addImage(dataUrl, 'PNG', 0, 0, sizeInMm, sizeInMm);
-                        pdf.save(`${fileName}.pdf`);
+                            // Save PDF
+                            pdf.save(`${fileName}.pdf`);
+                        } catch (pdfError) {
+                            console.error("PDF generation error:", pdfError);
+                            // Fallback to PNG download
+                            console.warn("Falling back to PNG download due to PDF generation failure");
+                            await qrCode.current.download({
+                                name: fileName,
+                                extension: "png"
+                            });
+                        }
                         break;
                 }
             } catch (error) {

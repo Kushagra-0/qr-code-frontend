@@ -21,13 +21,16 @@ const SmsForm = ({ typeData, setTypeData }: any) => {
 
     return (
         <div className="w-full mb-2">
-            <PhoneInput
-                country={defaultCountry}
-                value={typeData.smsNumber || ""}
-                onChange={(phone) => setTypeData({ ...typeData, smsNumber: `+${phone}` })}
-                inputClass="w-full border border-gray-300 rounded-lg px-4 py-2 mb-2"
-                containerClass="w-full"
-            />
+            <div className="mb-4">
+                <PhoneInput
+                    country={defaultCountry}
+                    value={typeData.smsNumber || ""}
+                    onChange={(phone) => setTypeData({ ...typeData, smsNumber: `+${phone}` })}
+                    inputClass="!w-full !text-sm !h-10 focus:!outline-none"
+                    containerClass="w-full"
+                />
+            </div>
+
 
             <input
                 type="text"

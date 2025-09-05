@@ -25,7 +25,7 @@ const PhoneForm = ({ typeData, setTypeData }: any) => {
                 country={defaultCountry}
                 value={typeData.phoneNumber || ""}
                 onChange={(phone) => setTypeData({ ...typeData, phoneNumber: `+${phone}` })}
-                inputClass="w-full border border-gray-300 rounded-lg px-4 py-2"
+                inputClass="!w-full !text-sm !h-10 focus:!outline-none"
                 containerClass="w-full"
             />
         </div>

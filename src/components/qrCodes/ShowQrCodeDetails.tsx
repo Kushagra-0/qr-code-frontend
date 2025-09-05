@@ -275,34 +275,36 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
 
   return (
     <>
-      <div className="grid grid-cols-8 grid-rows-2 mt-8 gap-8">
-        <div className="col-span-2 row-span-2 bg-[#F5F5F5]/80 rounded-2xl flex justify-end relative pt-14">
-
+      <div className="grid grid-cols-8 grid-rows-1 mt-8 gap-8">
+        <div className="col-span-8 md:col-span-4 xl:col-span-2 md:row-span-2 bg-[#F5F5F5]/80 rounded-2xl flex justify-center items-center pt-14 relative overflow-hidden max-h-[500px] h-auto min-h-[400px]">
+          {/* iPhone image centered and contained within div */}
           <img
             src="/iphone-medium.png"
             alt="iPhone"
-            className="h-[calc(100vh-420px)] object-contain"
+            className="h-full object-contain mx-auto w-auto min-h-[350px] max-h-[450px] xl:max-h-[400px] xl:min-h-[200px]"
           />
 
-          <div
-            className="absolute top-[35%] right-[22%] bg-white flex justify-center items-center"
-          >
-            <div className="p-0">
-              <CustomQRCode
-                data={`${window.location.origin}/qr/${qrCode.shortCode}`}
-                size={200}
-                margin={0}
-                backgroundOptions={qrCode.backgroundOptions}
-                dotsOptions={qrCode.dotsOptions}
-                cornersSquareOptions={qrCode.cornersSquareOptions}
-                cornersDotOptions={qrCode.cornersDotOptions}
-              />
+          {/* QR Code overlaid on top, centered */}
+          <div className="absolute inset-0 flex justify-center items-center z-10 mt-20">
+            <div className="bg-white flex justify-center items-center rounded-lg shadow-sm">
+              <div className="p-0">
+                <CustomQRCode
+                  ref={qrRef}
+                  data={`${window.location.origin}/qr/${qrCode.shortCode}`}
+                  size={160}
+                  margin={0}
+                  image={qrCode.image}
+                  backgroundOptions={qrCode.backgroundOptions}
+                  dotsOptions={qrCode.dotsOptions}
+                  cornersSquareOptions={qrCode.cornersSquareOptions}
+                  cornersDotOptions={qrCode.cornersDotOptions}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-
-        <div className="col-span-6 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex flex-col justify-between">
+        <div className="col-span-8 md:col-span-4 xl:col-span-6 row-span-1/2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
               <div className="text-3xl font-bold">
@@ -372,7 +374,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
               </div>
             </div>
 
-            <div className="bg-white px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(100,100,100,0.5)] text-[#036AFF] font-bold">
+            <div className="bg-white px-2 py-1 md:px-4 md:py-2 md:text-sm rounded-lg shadow-[0_0_20px_rgba(100,100,100,0.5)] text-[#036AFF] font-bold">
               {qrCode.isDynamic ? (
                 qrCode.isPaused ? (
                   <span className="text-red-500">🛑 DYNAMIC • PAUSED</span>
@@ -386,7 +388,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </div>
         </div>
 
-        <div className="col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
+        <div className="col-span-8 md:col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
           <div className={`${!qrCode.isDynamic ? "blur-sm pointer-events-none select-none" : ""}`}>
             <div className="flex flex-col">
               <div className="text-xl font-bold">TOTAL SCANS</div>
@@ -403,7 +405,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </div>
         </div>
 
-        <div className="col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
+        <div className="col-span-8 md:col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
           <div className={`${!qrCode.isDynamic ? "blur-sm pointer-events-none select-none" : ""}`}>
             <div className="flex flex-col">
               <div className="text-xl font-bold">UNIQUE SCANS</div>
@@ -421,7 +423,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </div>
         </div>
 
-        <div className="col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
+        <div className="col-span-8 lg:col-span-8 xl:col-span-2 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8 flex justify-between">
           <div className="flex flex-col w-full gap-6">
             <div id="qr-download-dropdown" className="relative">
               <button
@@ -433,7 +435,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
                 disabled={isDownloading}
               >
                 <Download size={30} className="mt-1" />
-                {isDownloading ? 'DOWNLOADING...' : 'DOWNLOAD'}
+                {isDownloading ? <></> : 'DOWNLOAD'}
               </button>
 
               {showDownloadDropdown && !isDownloading && (
@@ -479,7 +481,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </div>
         </div>
 
-        <div className="col-span-5 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-5 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Scans Over Time</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={scanTimeData}>
@@ -492,7 +494,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="col-span-3 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-3 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Device Types</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -515,7 +517,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="col-span-4 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-4 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Top Browsers</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={browserData}>
@@ -528,7 +530,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="col-span-4 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-4 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Top Countries</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={countryData}>
@@ -541,7 +543,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="col-span-3 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-3 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Hourly Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={hourlyData}>
@@ -554,7 +556,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </ResponsiveContainer>
         </div>
 
-        <div className="col-span-5 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
+        <div className="col-span-8 md:col-span-5 bg-[#F5F5F5]/80 rounded-2xl px-8 py-8">
           <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
           <div className="space-y-6 overflow-y-scroll h-72 custom-scrollbar pr-2">
             {analytics.recentActivity.map((scan: any, index: any) => (

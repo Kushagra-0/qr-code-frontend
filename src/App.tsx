@@ -17,6 +17,7 @@ import CreateQrCode from './pages/protected/qrcodes/create/CreateQrCode';
 import QrRedirect from './pages/public/qrRedirect/QrRedirect';
 import QrCodeDetails from './pages/protected/qrcodes/details/QrCodeDetails';
 import EditQrCode from './pages/protected/qrcodes/edit/EditQrCode';
+import QrPage from './pages/public/qrPage/QrPage';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="/blog/:slug" element={<BlogPage />} />
         <Route path="/qrcodes/link/:id" element={<QrRedirect />} />
         <Route path="/qr/:shortCode" element={<QrRedirect />} />
+        <Route path="/page/:shortCode" element={<QrPage />} />
 
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />}/>} />
         <Route path="/qrcodes/create" element={<ProtectedRoute element={<CreateQrCode />} />} />
