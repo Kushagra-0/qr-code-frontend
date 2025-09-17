@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../../common/constant";
-import { ArrowLeft, ArrowRight, Calendar, Link, Search } from "react-feather";
+import { ArrowLeft, ArrowRight, Bookmark, Calendar, Link, Search } from "react-feather";
 import { useAuth } from '../../../context/AuthContext';
 import { QrCode } from '../../../interface/QrCode';
 import CustomQRCode from '../../qrCodes/CustomQRCode';
@@ -138,6 +138,7 @@ const QrCodeTab = () => {
                             className="bg-white rounded-xl shadow px-6 py-3 flex justify-between items-center relative"
                         >
                             <div className='flex flex-row my-2'>
+
                                 <div className='border border-gray-300'>
                                     <CustomQRCode
                                         data={`${window.location.origin}/qr/${qr.shortCode}`}
@@ -158,14 +159,21 @@ const QrCodeTab = () => {
                                             {`${window.location.origin}/qr/${qr.shortCode}`}
                                         </div>
                                     </button>
-                                    <div className="flex flex-row text-xs text-gray-400 gap-2 mt-2">
-                                        <Calendar size={12} className="mt-0.5" />
-                                        <div>
-                                            {new Date(qr.createdAt).toLocaleDateString("en-US", {
-                                                month: "short",
-                                                day: "numeric",
-                                                year: "numeric",
-                                            })}
+                                    <div className="flex flex-row text-xs text-gray-400 gap-4 mt-2 items-center">
+                                        <div className="flex flex-row text-x gap-2">
+                                            <Bookmark size={12} className="mt-0.5"/>
+                                            <p className="">{qr.type.charAt(0).toUpperCase() + qr.type.slice(1).toLowerCase()}</p>
+                                        </div>
+
+                                        <div className="flex flex-row text-x gap-2">
+                                            <Calendar size={12} className="mt-0.5" />
+                                            <div>
+                                                {new Date(qr.createdAt).toLocaleDateString("en-US", {
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    year: "numeric",
+                                                })}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

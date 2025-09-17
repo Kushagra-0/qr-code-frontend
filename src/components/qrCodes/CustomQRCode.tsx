@@ -109,47 +109,53 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
         download: async (extension: "png" | "jpg" | "svg" | "pdf") => {
             if (!qrCode.current) return;
 
+            const downloadSize = 1024;
+
+            const tempQRCode = new QRCodeStyling({
+                width: downloadSize,
+                height: downloadSize,
+                margin,
+                data,
+                type: "svg", // Always generate as SVG first for best scaling
+                image: image || undefined,
+                backgroundOptions: backgroundOptions,
+                dotsOptions: dotsOptions,
+                cornersSquareOptions: cornersSquareOptions,
+                cornersDotOptions: cornersDotOptions
+            });
+
             const fileName = `qr-code`;
 
             try {
                 switch (extension) {
                     case "png":
-                        await qrCode.current.download({
+                        await tempQRCode.download({
                             name: fileName,
                             extension: "png"
                         });
                         break;
 
                     case "jpg":
-                        await qrCode.current.download({
+                        await tempQRCode.download({
                             name: fileName,
                             extension: "jpeg"
                         });
                         break;
 
                     case "svg":
-                        await qrCode.current.download({
+                        await tempQRCode.download({
                             name: fileName,
                             extension: "svg"
                         });
                         break;
 
                     case "pdf":
-                        // Check for browser compatibility
-                        if (!window.Blob || !window.URL || !window.URL.createObjectURL) {
-                            console.error("Browser does not support required APIs for PDF generation");
-                            throw new Error("Browser does not support PDF generation");
-                        }
-
-                        // Get QR code as PNG Blob
-                        const pngBlob = await qrCode.current.getRawData("png");
+                        const pngBlob = await tempQRCode.getRawData("png");
                         if (!pngBlob) {
-                            console.error("Failed to generate QR code PNG data");
+                            console.error("Failed to generate QR code PNG data for PDF");
                             throw new Error("Failed to generate QR code image");
                         }
-
                         try {
-                            // Convert Blob to data URL
                             const pngDataUrl = await new Promise<string>((resolve, reject) => {
                                 const reader = new FileReader();
                                 reader.onload = () => resolve(reader.result as string);
@@ -157,28 +163,66 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
                                 reader.readAsDataURL(pngBlob);
                             });
 
-                            // Create new jsPDF instance
                             const pdf = new jsPDF({
                                 orientation: "portrait",
                                 unit: "px",
-                                format: [size + margin * 2, size + margin * 2]
+                                format: [downloadSize + margin * 2, downloadSize + margin * 2]
                             });
-
-                            // Add QR code image to PDF
-                            pdf.addImage(pngDataUrl, "PNG", margin, margin, size, size);
-
-                            // Save PDF
+                            pdf.addImage(pngDataUrl, "PNG", margin, margin, downloadSize, downloadSize);
                             pdf.save(`${fileName}.pdf`);
                         } catch (pdfError) {
                             console.error("PDF generation error:", pdfError);
-                            // Fallback to PNG download
                             console.warn("Falling back to PNG download due to PDF generation failure");
-                            await qrCode.current.download({
+                            await tempQRCode.download({
                                 name: fileName,
                                 extension: "png"
                             });
                         }
                         break;
+                    // // Check for browser compatibility
+                    // if (!window.Blob || !window.URL || !window.URL.createObjectURL) {
+                    //     console.error("Browser does not support required APIs for PDF generation");
+                    //     throw new Error("Browser does not support PDF generation");
+                    // }
+
+                    // // Get QR code as PNG Blob
+                    // const pngBlob = await qrCode.current.getRawData("png");
+                    // if (!pngBlob) {
+                    //     console.error("Failed to generate QR code PNG data");
+                    //     throw new Error("Failed to generate QR code image");
+                    // }
+
+                    // try {
+                    //     // Convert Blob to data URL
+                    //     const pngDataUrl = await new Promise<string>((resolve, reject) => {
+                    //         const reader = new FileReader();
+                    //         reader.onload = () => resolve(reader.result as string);
+                    //         reader.onerror = () => reject(new Error("Failed to read PNG data"));
+                    //         reader.readAsDataURL(pngBlob);
+                    //     });
+
+                    //     // Create new jsPDF instance
+                    //     const pdf = new jsPDF({
+                    //         orientation: "portrait",
+                    //         unit: "px",
+                    //         format: [size + margin * 2, size + margin * 2]
+                    //     });
+
+                    //     // Add QR code image to PDF
+                    //     pdf.addImage(pngDataUrl, "PNG", margin, margin, size, size);
+
+                    //     // Save PDF
+                    //     pdf.save(`${fileName}.pdf`);
+                    // } catch (pdfError) {
+                    //     console.error("PDF generation error:", pdfError);
+                    //     // Fallback to PNG download
+                    //     console.warn("Falling back to PNG download due to PDF generation failure");
+                    //     await qrCode.current.download({
+                    //         name: fileName,
+                    //         extension: "png"
+                    //     });
+                    // }
+                    // break;
                 }
             } catch (error) {
                 console.error("Download error:", error);

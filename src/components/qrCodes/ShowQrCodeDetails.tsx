@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { baseUrl } from "../../common/constant";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Download, Edit2, Link, MoreVertical, PauseCircle, Trash2 } from "react-feather";
+import { Bookmark, Calendar, Download, Edit2, Link, MoreVertical, PauseCircle, Trash2 } from "react-feather";
 import { QrCode } from "../../interface/QrCode";
 import CustomQRCode from "./CustomQRCode";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -363,16 +363,23 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
           </div>
 
           <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row gap-2">
-              <Calendar size={14} className="mt-1.5" />
-              <div>
-                {new Date(qrCode.createdAt).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-2">
+                <Bookmark size={14} className="mt-1.5"/>
+               <p>{qrCode.type.charAt(0).toUpperCase() + qrCode.type.slice(1).toLowerCase()}</p>
+              </div>
+              <div className="flex flex-row gap-2">
+                <Calendar size={14} className="mt-1.5" />
+                <div>
+                  {new Date(qrCode.createdAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </div>
               </div>
             </div>
+
 
             <div className="bg-white px-2 py-1 md:px-4 md:py-2 md:text-sm rounded-lg shadow-[0_0_20px_rgba(100,100,100,0.5)] text-[#036AFF] font-bold">
               {qrCode.isDynamic ? (

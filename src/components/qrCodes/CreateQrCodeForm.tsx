@@ -172,15 +172,24 @@ const CreateQrCodeForm = () => {
             }}
             className={`flex items-center text-xl justify-center text-start border rounded-xl px-4 font-medium transition-all gap-3 bg-white text-gray-800 hover:bg-gray-100 border-gray-300 ${type.size}`}
           >
-            {type.mainIcon ?
-              <>
-                <img src={type.mainIcon} className="size-10" />
-              </>
-              :
+            {type.iconType == 1 && (
               <>
                 {type.supportIcon}{type.label}
               </>
-            }
+            )}
+
+            {type.iconType == 2 && (
+              <>
+                <img src={type.mainIcon} className="size-7" />
+              </>
+            )}
+
+            {type.iconType == 3 && (
+              <div className="flex flex-col items-center justify-center gap-4">
+                <img src={type.mainIcon} className="size-10" />
+                {type.supportIcon}{type.label}
+              </div>
+            )}
 
           </button>
         ))}
