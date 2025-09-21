@@ -126,9 +126,9 @@ const Hero = () => {
 
 
   return (
-    <div className="grid grid-cols-5 mt-4 md:mt-8 gap-4 md:gap-8">
-      <div className="col-span-3 bg-[#F5F5F5]/80 rounded-2xl">
-        <div className="flex justify-between gap-4 my-8 mx-8 px-4 py-3 bg-white rounded-xl">
+    <div className="flex flex-col-reverse md:flex-row mt-4 md:mt-8 gap-4 md:gap-8">
+      <div className="md:w-3/5 bg-[#F5F5F5]/80 rounded-2xl">
+        <div className="flex flex-wrap justify-start gap-4 m-4 md:m-8 px-4 py-3 bg-white rounded-xl">
           {["URL", "TEXT", "E-MAIL", "SMS", "PDF", "MP3", "IMAGES", "UPI"].map((type) => (
             <button
               key={type}
@@ -136,7 +136,7 @@ const Hero = () => {
                 setSelectedType(type);
                 setInputValue("");
               }}
-              className={`p-3 text-lg md:text-2xl font-semibold rounded-lg transition-all ${selectedType === type
+              className={`px-2 py-2 text-lg md:text-2xl font-semibold rounded-lg transition-all ${selectedType === type
                 ? "text-[#036AFF]"
                 : "text-[#141414] hover:text-[#036AFF]"
                 }`}
@@ -146,7 +146,7 @@ const Hero = () => {
           ))}
         </div>
 
-        <div className="mx-8 h-3/4">
+        <div className="w-full mx-8 h-3/4">
           {selectedType == "URL" && (
             <div className='flex flex-col justify-between h-full'>
               <div className='h-full'>
@@ -155,7 +155,7 @@ const Hero = () => {
                   placeholder="Enter your link"
                   onChange={handleInputChange}
                   value={inputValue}
-                  className="h-full w-full rounded-xl font-bold text-6xl pb-36 placeholder-gray-400 outline-none transition-all"
+                  className="h-full w-full rounded-xl font-bold text-2xl md:text-4xl pb-36 placeholder-gray-400 outline-none transition-all"
                 />
               </div>
               <div className="flex items-center justify-between mb-4 space-x-4">
@@ -361,36 +361,34 @@ const Hero = () => {
 
         </div>
       </div>
-      <div className="relative col-span-2 flex bg-[#F5F5F5]/80 rounded-2xl justify-center items-center">
-        <img
-          src="/iphone.png"
-          alt="iPhone"
-          className="h-[calc(100vh-280px)] mt-30 object-contain ml-22"
-        />
 
-        <div className="absolute top-[40%] right-[32%] flex items-center justify-center">
-          {/* <QRCodeSVG
-            value={inputValue || ' '}
-            size={260}
-            fgColor={qrForegroundColor}
-          /> */}
-          <CustomQRCode
-            ref={qrRef}
-            data={qrValue}
-            size={265}
-            margin={-1}
-            image={image}
-            backgroundOptions={backgroundOptions}
-            dotsOptions={dotsOptions}
-            cornersSquareOptions={cornersSquareOptions}
-            cornersDotOptions={cornersDotOptions}
+
+      <div className="md:w-2/5 relative flex bg-[#F5F5F5]/80 rounded-2xl justify-center items-center">
+        <div className='flex items-center justify-center z-10'>
+          <img
+            src="/iphone-2.png"
+            alt="iPhone"
+            className="h-[calc(100vh-280px)] object-contain mt-30 min-w-[100px]"
           />
+          <div className="absolute mt-32 flex items-center justify-center">
+            <CustomQRCode
+              ref={qrRef}
+              data={qrValue}
+              size={265}
+              image={image}
+              backgroundOptions={backgroundOptions}
+              dotsOptions={dotsOptions}
+              cornersSquareOptions={cornersSquareOptions}
+              cornersDotOptions={cornersDotOptions}
+            />
+          </div>
         </div>
+
 
         {hasChangedColor && (
           <button
             onClick={() => setShowModal2(true)}
-            className={`absolute bottom-[73%] left-[56%] w-56 flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-3 py-6 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
+            className={`absolute z-20 bottom-[73%] left-[60%] w-1/3 flex items-center justify-center bg-[#FFFFFF] font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-3 py-6 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
             disabled={!qrValue}
           >
             With
@@ -401,7 +399,7 @@ const Hero = () => {
         {!hasDownloaded ? (
           <button
             onClick={() => handleDownload("png")}
-            className={`absolute top-[85%] flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-16 py-3 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
+            className={`absolute z-20 top-[87%] md:top-[85%] w-5/6 flex items-center justify-center bg-[#FFFFFF] font-bold text-2xl md:text-3xl lg:text-4xl xl:text-5xl px-1 py-3 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
             disabled={!qrValue}
           >
             DOWNLOAD PNG
@@ -409,13 +407,13 @@ const Hero = () => {
         ) : (
           <button
             onClick={() => setShowModal1(true)}
-            className="absolute top-[85%] flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-16 py-3 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl text-[#036AFF] cursor-pointer"
+            className="absolute z-20 top-[87%] md:top-[85%] w-5/6  flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-1 py-3 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl text-[#036AFF] cursor-pointer"
           >
             MORE OPTIONS
           </button>
         )}
 
-        <div className="flex flex-col justify-center items-center bg-[#FFFFFF] py-4 px-5 space-y-4 mt-32 rounded-xl mr-16">
+        <div className="lg:hidden xl:flex absolute right-8 flex flex-col justify-center items-center bg-[#FFFFFF] py-4 px-2 md:px-5 space-y-4 mt-32 rounded-xl">
           <button
             onClick={() => {
               setDotsOptions({ ...dotsOptions, color: "#000000", gradient: undefined })
@@ -428,8 +426,8 @@ const Hero = () => {
           <button
             onClick={() => {
               setDotsOptions({ ...dotsOptions, color: "#FF0A01", gradient: undefined })
-              setCornersDotOptions({ ...setCornersDotOptions, color: "#FF0A01", gradient: undefined })
-              setCornersSquareOptions({ ...setCornersSquareOptions, color: "#FF0A01", gradient: undefined })
+              setCornersDotOptions({ ...cornersDotOptions, color: "#FF0A01", gradient: undefined })
+              setCornersSquareOptions({ ...cornersSquareOptions, color: "#FF0A01", gradient: undefined })
               setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#FF0A01] rounded-full"

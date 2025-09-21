@@ -286,7 +286,7 @@ const ShowQrCodeDetails: React.FC<ShowQrCodeDetailsProps> = ({ id }) => {
 
           {/* QR Code overlaid on top, centered */}
           <div className="absolute inset-0 flex justify-center items-center z-10 mt-20">
-            <div className="bg-white flex justify-center items-center rounded-lg shadow-sm">
+            <div className="flex justify-center items-center rounded-lg shadow-sm">
               <div className="p-0">
                 <CustomQRCode
                   ref={qrRef}
