@@ -47,7 +47,7 @@ const Navbar = () => {
         className="text-2xl font-bold text-[#141414] cursor-pointer "
         onClick={() => navigate("/")}
       >
-        CUSTOM QR
+        QRSONLY
       </div>
 
       {/* Desktop Menu */}

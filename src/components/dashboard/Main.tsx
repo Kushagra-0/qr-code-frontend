@@ -15,7 +15,7 @@ const Main = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="flex flex-col md:grid md:grid-cols-5 mt-6 md:mt-8 gap-4 md:gap-8">
+        <div className="flex flex-col md:grid md:grid-cols-5 mt-4 md:mt-8 gap-4 md:gap-8">
             {/* Mobile Navbar */}
             <div className="flex items-center justify-between md:hidden bg-[#F5F5F5]/80 rounded-2xl px-4 py-3 shadow">
                 <h1 className="font-bold text-lg">Dashboard</h1>

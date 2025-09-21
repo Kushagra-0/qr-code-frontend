@@ -5,9 +5,10 @@ import { HexColorPicker } from "react-colorful";
 interface SimpleColorPickerProps {
   color: string;
   onChange: (color: string) => void;
+  size?: number
 }
 
-const ColorPicker: React.FC<SimpleColorPickerProps> = ({ color, onChange }) => {
+const ColorPicker: React.FC<SimpleColorPickerProps> = ({ color, onChange, size = 8 }) => {
   const [showPicker, setShowPicker] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -26,7 +27,7 @@ const ColorPicker: React.FC<SimpleColorPickerProps> = ({ color, onChange }) => {
       <button
         type="button"
         onClick={() => setShowPicker(!showPicker)}
-        className="w-8 h-8 rounded-full border border-gray-300 shadow-sm"
+        className={`w-${size} h-${size} rounded-full border border-gray-300 shadow-sm`}
         style={{ backgroundColor: color }}
       />
       {showPicker && (
