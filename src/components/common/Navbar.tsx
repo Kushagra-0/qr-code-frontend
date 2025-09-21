@@ -85,7 +85,7 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => navigate("/register")}
-              className="text-lg font-medium bg-white text-[#036AFF] px-5 py-2 rounded-xl shadow transition-all cursor-pointer hover:shadow-[0_0_20px_rgba(100,100,100,0.5)]"
+              className="text-lg font-medium bg-[#036AFF] text-white px-5 py-2 rounded-xl shadow transition-all cursor-pointer hover:shadow-[0_0_20px_rgba(100,100,100,0.5)]"
             >
               REGISTER
             </button>
@@ -101,8 +101,28 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Dropdown */}
+
       {isOpen && (
-        <div ref={dropdownRef} className="absolute top-full right-3 mt-2 w-48 bg-white rounded-xl flex flex-col items-start p-4 space-y-3 md:hidden shadow-[0_0_20px_rgba(100,100,100,0.5)]">
+        <div
+          ref={dropdownRef}
+          className="fixed inset-0 bg-gradient-to-r from-blue-200 to-pink-200 z-50 flex flex-col space-y-6 transition-all duration-300 px-4"
+        >
+          <div className="mt-4 mb-4 bg-[#F5F5F5]/80 px-6 py-4.5 flex justify-between items-center rounded-2xl">
+            <div
+              className="text-2xl font-bold text-[#141414] cursor-pointer "
+              onClick={() => navigate("/")}
+            >
+              QRSONLY
+            </div>
+          </div>
+          {/* Close Button (Top Right) */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-9 right-10"
+          >
+            <X size={32} />
+          </button>
+
           {token ? (
             <>
               {user?.role === "admin" && (
@@ -111,7 +131,7 @@ const Navbar = () => {
                     navigate("/admin/dashboard");
                     setIsOpen(false);
                   }}
-                  className="text-lg font-medium text-[#141414] hover:text-[#036AFF] transition-all"
+                  className="text-2xl font-semibold text-[#141414] hover:text-[#036AFF] transition-all"
                 >
                   ADMIN
                 </button>
@@ -121,7 +141,7 @@ const Navbar = () => {
                   navigate("/dashboard");
                   setIsOpen(false);
                 }}
-                className="text-lg font-medium text-[#141414] hover:text-[#036AFF] transition-all"
+                className="text-2xl font-semibold text-[#141414] hover:text-[#036AFF] transition-all"
               >
                 GO TO DASHBOARD
               </button>
@@ -130,7 +150,7 @@ const Navbar = () => {
                   handleLogout();
                   setIsOpen(false);
                 }}
-                className="text-[#e04343] text-lg font-medium transition-all"
+                className="text-2xl font-semibold text-[#e04343] transition-all"
               >
                 LOGOUT
               </button>
@@ -142,7 +162,7 @@ const Navbar = () => {
                   navigate("/login");
                   setIsOpen(false);
                 }}
-                className="text-lg font-medium text-[#141414] hover:text-[#036AFF] transition-all"
+                className="text-2xl font-semibold text-[#141414] hover:text-[#036AFF] transition-all"
               >
                 LOGIN
               </button>
@@ -151,7 +171,7 @@ const Navbar = () => {
                   navigate("/register");
                   setIsOpen(false);
                 }}
-                className="text-lg font-medium bg-white text-[#036AFF] px-5 py-2 rounded-xl shadow transition-all hover:shadow-[0_0_20px_rgba(100,100,100,0.5)]"
+                className="text-2xl font-semibold bg-[#036AFF] text-white px-6 py-3 rounded-xl shadow-lg hover:bg-[#0056cc] transition-all"
               >
                 REGISTER
               </button>
