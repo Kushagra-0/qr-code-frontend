@@ -64,6 +64,7 @@ const Hero = () => {
     type: "square"
   })
 
+  const [hasChangedColor, setHasChangedColor] = useState(false);
   const [hasDownloaded, setHasDownloaded] = useState(false);
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -386,14 +387,16 @@ const Hero = () => {
           />
         </div>
 
-        <button
-          onClick={() => setShowModal2(true)}
-          className={`absolute bottom-[73%] left-[56%] w-56 flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-3 py-6 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
-          disabled={!qrValue}
-        >
-          With 
-          Logo ?
-        </button>
+        {hasChangedColor && (
+          <button
+            onClick={() => setShowModal2(true)}
+            className={`absolute bottom-[73%] left-[56%] w-56 flex items-center justify-center bg-[#FFFFFF] font-bold text-5xl px-3 py-6 shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl cursor-pointer ${qrValue ? "text-[#036AFF]" : "text-gray-500"}`}
+            disabled={!qrValue}
+          >
+            With
+            Logo ?
+          </button>
+        )}
 
         {!hasDownloaded ? (
           <button
@@ -418,6 +421,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: "#000000", gradient: undefined })
               setCornersDotOptions({ ...setCornersDotOptions, color: "#000000", gradient: undefined })
               setCornersSquareOptions({ ...setCornersSquareOptions, color: "#000000", gradient: undefined })
+              setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#000000] rounded-full"
           />
@@ -426,6 +430,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: "#FF0A01", gradient: undefined })
               setCornersDotOptions({ ...setCornersDotOptions, color: "#FF0A01", gradient: undefined })
               setCornersSquareOptions({ ...setCornersSquareOptions, color: "#FF0A01", gradient: undefined })
+              setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#FF0A01] rounded-full"
           />
@@ -434,6 +439,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: "#FF9110", gradient: undefined })
               setCornersDotOptions({ ...setCornersDotOptions, color: "#FF9110", gradient: undefined })
               setCornersSquareOptions({ ...setCornersSquareOptions, color: "#FF9110", gradient: undefined })
+              setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#FF9110] rounded-full"
           />
@@ -442,6 +448,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: "#FCFF03", gradient: undefined })
               setCornersDotOptions({ ...setCornersDotOptions, color: "#FCFF03", gradient: undefined })
               setCornersSquareOptions({ ...setCornersSquareOptions, color: "#FCFF03", gradient: undefined })
+              setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#FCFF03] rounded-full"
           />
@@ -450,6 +457,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: "#0D19FF", gradient: undefined })
               setCornersDotOptions({ ...setCornersDotOptions, color: "#0D19FF", gradient: undefined })
               setCornersSquareOptions({ ...setCornersSquareOptions, color: "#0D19FF", gradient: undefined })
+              setHasChangedColor(true);
             }}
             className="h-6 w-6 bg-[#0D19FF] rounded-full"
           />
@@ -461,6 +469,7 @@ const Hero = () => {
               setDotsOptions({ ...dotsOptions, color: c, gradient: undefined })
               setCornersDotOptions({ ...cornersDotOptions, color: c, gradient: undefined })
               setCornersSquareOptions({ ...cornersSquareOptions, color: c, gradient: undefined })
+              setHasChangedColor(true);
             }}
           />
         </div>
@@ -583,7 +592,7 @@ const Hero = () => {
           </div>
         </div>
       )}
-      
+
     </div >
   );
 };
