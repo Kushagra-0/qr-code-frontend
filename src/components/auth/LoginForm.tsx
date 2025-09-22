@@ -49,8 +49,8 @@ const LoginForm = () => {
 
 
   return (
-    <div className="bg-[#F5F5F5]/80 h-6/7 w-2/6 rounded-2xl px-8 pt-8 pb-4 flex flex-col justify-between">
-      <div>
+    <div className="bg-[#F5F5F5]/80 w-full sm:w-4/6 md:w-3/6 lg:w-2/6 rounded-2xl px-4 md:px-8 pt-8 pb-4 flex flex-col justify-between">
+      <div className='mb-16'>
         <h2 className="text-5xl font-bold text-center text-[#141414]">
           WELCOME BACK
         </h2>
@@ -63,10 +63,10 @@ const LoginForm = () => {
               {error}
             </div>
           )}
-          <div className="mb-8">
+          <div className="mb-4 md:mb-8">
             <input
               type="email"
-              className="w-full p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
+              className="w-full p-3 md:p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
               required
               value={email}
               placeholder="Email"
@@ -77,7 +77,7 @@ const LoginForm = () => {
           <div className="relative mb-2">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="w-full p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
+              className="w-full p-3 md:p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
               required
               value={password}
               placeholder="Password"
@@ -103,7 +103,7 @@ const LoginForm = () => {
 
           <button
             type="submit"
-            className={`w-full py-4 rounded-xl ${isLoading ? 'bg-gray-400' : 'bg-[#036AFF]'
+            className={`w-full py-3 md:py-4 rounded-xl ${isLoading ? 'bg-gray-400' : 'bg-[#036AFF]'
               } text-white text-xl font-bold`}
             disabled={isLoading}
           >

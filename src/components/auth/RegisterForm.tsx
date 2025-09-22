@@ -77,8 +77,8 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="bg-[#F5F5F5]/80 h-6/7 w-2/6 rounded-2xl px-8 pt-8 pb-4 flex flex-col justify-between">
-      <div>
+    <div className="bg-[#F5F5F5]/80 w-full sm:w-4/6 md:w-3/6 lg:w-2/6 rounded-2xl px-4 md:px-8 pt-8 pb-4 flex flex-col justify-between">
+      <div className='mb-10'>
         <h2 className="text-5xl font-bold text-center text-[#141414]">LET'S</h2>
         <h2 className="text-5xl font-bold text-center text-[#141414] mb-6">
           GET STARTED
@@ -91,10 +91,10 @@ const RegisterForm = () => {
             <p className="text-red-500 font-semibold text-sm mb-4 text-center">{error}</p>
           )}
 
-          <div className="mb-8">
+          <div className="mb-4 md:mb-8">
             <input
               type="email"
-              className="w-full p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
+              className="w-full p-3 md:p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
               required
               value={email}
               placeholder="Email"
@@ -102,10 +102,10 @@ const RegisterForm = () => {
             />
           </div>
 
-          <div className="mb-8 relative">
+          <div className="mb-4 md:mb-8 relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              className="w-full p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
+              className="w-full p-3 md:p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
               required
               value={password}
               placeholder="Password"
@@ -122,9 +122,10 @@ const RegisterForm = () => {
             </button>
 
             {passwordFocused && (
-              <div className="absolute top-0 left-full ml-4 w-64 p-4 rounded-xl bg-white shadow-lg border border-gray-200 z-10">
-                
-                <div className="absolute -left-2 top-4 w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-white"></div>
+              <div className="absolute top-full md:top-0 left-0 md:left-full mt-4 md:mt-0 ml-0 md:ml-4 w-64 p-4 rounded-xl bg-white shadow-lg border border-gray-200 z-10">
+                <div className="md:hidden absolute left-4 -top-2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white"></div>
+
+                <div className="hidden md:block absolute -left-2 md:-left-2 top-0 md:top-4 w-0 h-0 md:border-t-8 md:border-b-8 md:border-r-8 md:border-t-transparent md:border-b-transparent md:border-r-white"></div>
 
                 <p className={`${validation.length ? 'text-green-600' : 'text-red-500'}`}>
                   {validation.length ? '✅' : '❌'} At least 8 characters
@@ -142,10 +143,10 @@ const RegisterForm = () => {
             )}
           </div>
 
-          <div className="mb-8 relative">
+          <div className="mb-4 md:mb-8 relative">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
-              className="w-full p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
+              className="w-full p-3 md:p-4 rounded-xl focus:outline-none bg-[#FFFFFF] font-semibold text-lg"
               required
               value={confirmPassword}
               placeholder="Confirm Password"
@@ -162,7 +163,7 @@ const RegisterForm = () => {
 
           <button
             type="submit"
-            className={`w-full py-4 rounded-xl ${isLoading ? 'bg-gray-400' : 'bg-[#036AFF]'
+            className={`w-full py-3 md:py-4 rounded-xl ${isLoading ? 'bg-gray-400' : 'bg-[#036AFF]'
               } text-white text-xl font-bold`}
             disabled={isLoading}
           >
