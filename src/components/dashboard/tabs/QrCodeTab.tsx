@@ -57,57 +57,110 @@ const QrCodeTab = () => {
     const startIndex = (currentPage - 1) * qrsPerPage;
     const paginatedQrs = filteredQrs.slice(startIndex, startIndex + qrsPerPage);
 
+    // if (authLoading || loading) {
+    //     return (
+    //         <div className="w-full h-full flex flex-col">
+    //             {/* Header skeleton */}
+    //             <div className="flex justify-between items-center mb-4 shrink-0">
+    //                 <div className="flex items-center gap-2">
+    //                     <Skeleton className="h-10 w-64 rounded-xl" />
+    //                 </div>
+    //                 <Skeleton className="h-12 w-40 rounded-2xl" />
+    //             </div>
+
+    //             {/* QR list skeleton */}
+    //             <div className="overflow-y-auto pr-3 space-y-4 grow mt-2 custom-scrollbar">
+    //                 {[1, 2, 3].map((i) => (
+    //                     <div
+    //                         key={i}
+    //                         className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
+    //                     >
+    //                         {/* QR preview + text */}
+    //                         <div className="flex flex-row gap-4">
+    //                             <Skeleton className="h-24 w-24 rounded-md" />
+    //                             <div className="flex flex-col gap-2 mt-2">
+    //                                 <Skeleton className="h-6 w-40" />
+    //                                 <Skeleton className="h-4 w-60" />
+    //                                 <Skeleton className="h-3 w-24" />
+    //                             </div>
+    //                         </div>
+
+    //                         {/* Scan count box */}
+    //                         <div className="absolute middle-0 right-50 rounded-lg border-2 border-gray-200 px-5 py-7">
+    //                             <Skeleton className="h-6 w-10 mb-2" />
+    //                             <Skeleton className="h-3 w-12" />
+    //                         </div>
+
+    //                         {/* Right-side buttons */}
+    //                         <div className="flex items-end mb-4 gap-8 flex-col">
+    //                             <Skeleton className="h-8 w-40 rounded-lg" />
+    //                             <Skeleton className="h-10 w-40 rounded-xl" />
+    //                         </div>
+    //                     </div>
+    //                 ))}
+    //             </div>
+    //         </div>
+    //     );
+    // }
+
     if (authLoading || loading) {
         return (
             <div className="w-full h-full flex flex-col">
                 {/* Header skeleton */}
-                <div className="flex justify-between items-center mb-4 shrink-0">
-                    <div className="flex items-center gap-2">
-                        <Skeleton className="h-10 w-64 rounded-xl" />
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-4 shrink-0">
+                    <div className="flex items-center gap-2 w-full md:w-auto">
+                        <Skeleton className="h-8 w-full sm:h-10 md:h-10 md:w-64 rounded-xl" />
                     </div>
-                    <Skeleton className="h-12 w-40 rounded-2xl" />
+                    <Skeleton className="h-10 w-full sm:h-12 md:h-12 md:w-44 rounded-2xl" />
                 </div>
 
                 {/* QR list skeleton */}
                 <div className="overflow-y-auto pr-3 space-y-4 grow mt-2 custom-scrollbar">
-                    {[1, 2, 3].map((i) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
                         <div
                             key={i}
-                            className="bg-white rounded-xl shadow px-6 py-4 flex justify-between items-center relative"
+                            className="bg-white rounded-xl shadow px-4 sm:px-6 py-4 flex flex-row justify-between items-center relative gap-4"
                         >
                             {/* QR preview + text */}
-                            <div className="flex flex-row gap-4">
-                                <Skeleton className="h-24 w-24 rounded-md" />
-                                <div className="flex flex-col gap-2 mt-2">
-                                    <Skeleton className="h-6 w-40" />
-                                    <Skeleton className="h-4 w-60" />
-                                    <Skeleton className="h-3 w-24" />
+                            <div className="flex flex-row gap-4 w-full sm:w-auto">
+                                <Skeleton className="h-20 w-20 sm:h-24 sm:w-24 rounded-md" />
+                                <div className="flex flex-col gap-2 mt-1 w-full sm:w-auto">
+                                    <Skeleton className="h-4 sm:h-6 w-28 sm:w-40" />
+                                    <Skeleton className="h-3 sm:h-4 w-40 sm:w-60" />
+                                    <Skeleton className="h-2 sm:h-3 w-16 sm:w-24" />
                                 </div>
                             </div>
 
-                            {/* Scan count box */}
-                            <div className="absolute middle-0 right-50 rounded-lg border-2 border-gray-200 px-5 py-7">
-                                <Skeleton className="h-6 w-10 mb-2" />
-                                <Skeleton className="h-3 w-12" />
-                            </div>
+                            <div className="flex flex-row gap-4">
+                                {/* Scan count box */}
+                                <div className="hidden lg:flex flex-col rounded-lg border-2 border-gray-200 px-4 py-5">
+                                    <Skeleton className="h-5 w-8 sm:h-6 sm:w-10 mb-2" />
+                                    <Skeleton className="h-2 sm:h-3 w-10 sm:w-12" />
+                                </div>
 
-                            {/* Right-side buttons */}
-                            <div className="flex items-end mb-4 gap-8 flex-col">
-                                <Skeleton className="h-8 w-40 rounded-lg" />
-                                <Skeleton className="h-10 w-40 rounded-xl" />
+                                {/* Right-side buttons */}
+                                <div className="flex flex-col items-end gap-3 w-full sm:w-auto">
+                                    <Skeleton className="hidden md:flex h-7 w-28 sm:h-8 sm:w-40 rounded-lg" />
+                                    <Skeleton className="h-8 w-28 mt-10 md:mt-0 sm:h-10 sm:w-40 rounded-xl" />
+                                </div>
                             </div>
                         </div>
                     ))}
+                </div>
+                {/* Header skeleton */}
+                <div className="flex flex-col justify-end items-end gap-3 mt-4 shrink-0">
+                    <Skeleton className="h-7 w-44 sm:h-7 sm:w-40 md:h-7 md:w-44 rounded-2xl" />
                 </div>
             </div>
         );
     }
 
 
+
     return (
         <div className="w-full h-full flex flex-col">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 shrink-0">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 shrink-0">
                 <div className="flex items-center gap-2 justify-between bg-white border border-gray-300 rounded-xl px-2 py-1 w-full md:w-auto">
                     <input
                         type="text"
@@ -135,7 +188,7 @@ const QrCodeTab = () => {
                     paginatedQrs.map((qr) => (
                         <div
                             key={qr._id}
-                            className="bg-white rounded-xl shadow px-6 py-3 flex justify-between items-center relative"
+                            className="bg-white rounded-xl shadow px-4 md:px-6 py-1.5 md:py-3 flex justify-between items-center relative"
                         >
                             <div className='flex flex-row my-2'>
 
@@ -161,11 +214,11 @@ const QrCodeTab = () => {
                                     </button>
                                     <div className="flex flex-row text-xs text-gray-400 gap-4 mt-2 items-center">
                                         <div className="flex flex-row text-x gap-2">
-                                            <Bookmark size={12} className="mt-0.5"/>
+                                            <Bookmark size={12} className="mt-0.5" />
                                             <p className="">{qr.type.charAt(0).toUpperCase() + qr.type.slice(1).toLowerCase()}</p>
                                         </div>
 
-                                        <div className="flex flex-row text-x gap-2">
+                                        <div className="hidden md:flex flex-row text-xs gap-2">
                                             <Calendar size={12} className="mt-0.5" />
                                             <div>
                                                 {new Date(qr.createdAt).toLocaleDateString("en-US", {
@@ -200,7 +253,7 @@ const QrCodeTab = () => {
                                 </div>
                                 <button
                                     onClick={() => navigate(`/qrcodes/details/${qr._id}`)}
-                                    className="absolute bottom-5.5 right-6 w-40 text-blue-600 hover:text-blue-700 border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl p-0 lg:p-4 font-bold cursor-pointer flex flex-row items-center justify-center text-lg lg:text-xl"
+                                    className="absolute bottom-5.5 right-6 px-2 md:px-0 md:w-40 text-blue-600 hover:text-blue-700 border-2 border-gray-300 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl p-0 lg:p-4 font-bold cursor-pointer flex flex-row items-center justify-center text-lg lg:text-xl"
                                 >
                                     <div>DETAILS</div>
                                     <div className="ml-1 mt-1">
