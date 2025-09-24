@@ -108,10 +108,6 @@ const Hero = () => {
     setSmsData({ ...smsData, [field]: e.target.value });
   };
 
-  const handleUpiChange = (e: any, field: any) => {
-    setUpiData({ ...upiData, [field]: e.target.value });
-  };
-
   const handleDownload = async (format: "png" | "jpg" | "svg" | "pdf") => {
     if (!qrRef.current) return;
 
@@ -164,7 +160,7 @@ const Hero = () => {
                   className="flex items-center space-x-2 cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   <Upload size={20} />
-                  <span className="font-medium">Upload any file</span>
+                  <span className="text-xs md:text-base font-medium">Upload any file</span>
                 </div>
                 <div className='flex items-center gap-2'>
                   <button
@@ -180,7 +176,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -204,7 +200,7 @@ const Hero = () => {
                   className="flex items-center space-x-2 cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   <Upload size={20} />
-                  <span className="font-medium">Upload any file</span>
+                  <span className="text-xs md:text-base font-medium">Upload any file</span>
                 </div>
                 <div className='flex items-center gap-2'>
                   <button
@@ -217,7 +213,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -266,7 +262,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -309,7 +305,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -352,7 +348,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -395,7 +391,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -438,7 +434,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
@@ -481,7 +477,7 @@ const Hero = () => {
                       ${isTrackingEnabled ? "translate-x-6" : "translate-x-0"}`}
                     />
                   </button>
-                  <span className="text-gray-700 font-semibold">Scan Tracking</span>
+                  <span className="text-xs md:text-base text-gray-700 font-semibold">Scan Tracking</span>
                 </div>
 
               </div>
