@@ -92,7 +92,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchQRCode = async () => {

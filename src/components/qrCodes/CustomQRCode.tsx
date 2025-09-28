@@ -63,6 +63,16 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
     const divRef = useRef<HTMLDivElement>(null);
     const qrCode = useRef<QRCodeStyling | null>(null);
 
+    const preloadImage = (url: string) => {
+      return new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.crossOrigin = "anonymous"; // Important for S3 images
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+      });
+    };
+
     // Initialize once
     useEffect(() => {
         qrCode.current = new QRCodeStyling({
@@ -71,7 +81,7 @@ const CustomQRCode = forwardRef<CustomQRCodeHandle, CustomQRCodeProps>(({
             margin,
             data,
             type: "svg",
-            image: image || undefined,
+            // image: image || undefined,
             backgroundOptions: backgroundOptions,
             dotsOptions: dotsOptions,
             cornersSquareOptions: cornersSquareOptions,

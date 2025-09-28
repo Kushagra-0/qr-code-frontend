@@ -158,11 +158,11 @@ const CreateQrCodeForm = () => {
   };
 
   const renderStep1 = () => (
-    <div className="bg-[#F5F5F5]/80 rounded-2xl p-8 min-h-[78vh]">
+    <div className="bg-[#F5F5F5]/80 rounded-2xl p-4 md:p-8 min-h-[78vh]">
       <h1 className="text-3xl font-bold mb-10 flex justify-center ">Select QR Code Type</h1>
 
       {/* Uneven grid */}
-      <div className="grid grid-cols-14 gap-4 auto-rows-[80px]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-14 gap-3 md:gap-4 auto-rows-[80px] sm:auto-rows-[90px] md:auto-rows-[100px]">
         {qrTypes.map((type) => (
           <button
             key={type.value}
@@ -170,7 +170,7 @@ const CreateQrCodeForm = () => {
               setQrType(type.value);
               setStep(2);
             }}
-            className={`flex items-center text-xl justify-center text-start border rounded-xl px-4 font-medium transition-all gap-3 bg-white text-gray-800 hover:bg-gray-100 border-gray-300 ${type.size}`}
+            className={`flex items-center text-sm sm:text-base md:text-lg justify-center text-start border rounded-xl px-2 md:px-4 py-2 font-medium transition-all gap-2 md:gap-3 bg-white text-gray-800 hover:bg-gray-100 border-gray-300 ${type.size}`}
           >
             {type.iconType == 1 && (
               <>
@@ -180,14 +180,17 @@ const CreateQrCodeForm = () => {
 
             {type.iconType == 2 && (
               <>
-                <img src={type.mainIcon} className="size-7" />
+                <img src={type.mainIcon} className="size-6 md:size-7" />
               </>
             )}
 
             {type.iconType == 3 && (
-              <div className="flex flex-col items-center justify-center gap-4">
-                <img src={type.mainIcon} className="size-10" />
-                {type.supportIcon}{type.label}
+              <div className="flex flex-col items-center justify-center gap-2 md:gap-3">
+                <img src={type.mainIcon} className="size-6 md:md:size-7 xl:size-10" />
+                <span className="hidden xl:flex">
+                  {type.supportIcon}{type.label}
+                </span>
+
               </div>
             )}
 
@@ -198,8 +201,8 @@ const CreateQrCodeForm = () => {
   );
 
   const renderStep2 = () => (
-    <div className="w-full flex items-center justify-center bg-[#F5F5F5]/80 rounded-2xl p-8">
-      <div className="bg-white p-8 w-1/2 rounded-xl">
+    <div className="w-full flex items-center justify-center bg-[#F5F5F5]/80 rounded-2xl p-4 md:p-8">
+      <div className="bg-white p-4 md:p-8 w-full md:w-3/4 lg:w-2/3 xl:w-1/2 rounded-xl">
         <div>
           <h1 className="text-3xl font-bold mb-6">Enter QR Code Data</h1>
 
@@ -231,8 +234,6 @@ const CreateQrCodeForm = () => {
             <PhoneForm typeData={typeData} setTypeData={setTypeData} />
           )}
 
-
-
           {qrType === "YOUTUBE" && (
             <YoutubeForm typeData={typeData} setTypeData={setTypeData} />
           )}
@@ -248,8 +249,6 @@ const CreateQrCodeForm = () => {
           {qrType === "UPI" && (
             <UpiForm typeData={typeData} setTypeData={setTypeData} />
           )}
-
-
 
           {qrType === "AUDIO" && (
             <AudioForm typeData={typeData} setTypeData={setTypeData} />
@@ -284,42 +283,40 @@ const CreateQrCodeForm = () => {
 
   const renderStep3 = () => (
     <>
-      <div className="grid grid-cols-3 h-[78vh] gap-8">
-        <div className="flex justify-center bg-[#F5F5F5]/80 rounded-2xl relative">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:h-[78vh] gap-4 md:gap-8">
+        <div className="flex items-center justify-center col-span-1 bg-[#F5F5F5]/80 rounded-2xl relative">
           <img
-            src="/iphone.png"
+            src="/iphone-2.png"
             alt="iPhone"
-            className="h-[calc(100vh-300px)] object-contain mt-32"
+            className="block max-h-[70vh] lg:h-[calc(100vh-280px)] object-contain mt-3 md:mt-30 w-auto min-w-[100px]"
           />
 
-          <div className="absolute top-[42%] right-[26%] bg-white flex justify-center items-center">
-            <div className="p-2">
-              <CustomQRCode
-                data={createdQRCode?.isDynamic ? `${window.location.origin}/qr/${createdQRCode?.shortCode}` : "xcvb"}
-                size={220}
-                margin={-1}
-                image={image}
-                backgroundOptions={backgroundOptions}
-                dotsOptions={dotsOptions}
-                cornersSquareOptions={cornersSquareOptions}
-                cornersDotOptions={cornersDotOptions}
-              />
-            </div>
+          <div className="absolute flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 md:mt-16 bg-white">
+            <CustomQRCode
+              data={createdQRCode?.isDynamic ? `${window.location.origin}/qr/${createdQRCode?.shortCode}` : "xcvb"}
+              size={220}
+              margin={-1}
+              image={image}
+              backgroundOptions={backgroundOptions}
+              dotsOptions={dotsOptions}
+              cornersSquareOptions={cornersSquareOptions}
+              cornersDotOptions={cornersDotOptions}
+            />
           </div>
 
-          <div className="absolute top-[85%] flex items-center justify-center bg-[#FFFFFF] text-[#036AFF] font-bold px-16 py-2 border-2 border-gray-900 rounded-xl">
+          <div className="absolute bottom-4 md:bottom-8 w-5/6 flex items-center justify-center bg-[#FFFFFF] text-[#036AFF] font-bold border-2 border-gray-900 rounded-xl">
             <button
               type="submit"
               disabled={loading}
-              className={`text-4xl font-bold rounded-lg ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
+              className={`text-2xl md:text-3xl lg:text-4xl xl:text-4xl px-1 py-3 font-bold rounded-lg ${loading ? "cursor-not-allowed" : "cursor-pointer"}`}
             >
               {loading ? "SAVING..." : "SAVE CHANGES"}
             </button>
           </div>
         </div>
 
-        <div className="bg-[#F5F5F5]/80 rounded-2xl p-8 col-span-2 gap-6 overflow-y-scroll custom-scrollbar">
-          <div className="flex justify-between px-48 py-4 rounded-2xl text-xl flex-between border-b bg-white border-gray-300 mb-6">
+        <div className="bg-[#F5F5F5]/80 rounded-2xl p-4 md:p-8 col-span-1 md:col-span-2 overflow-y-scroll custom-scrollbar">
+          <div className="flex justify-between px-18 md:px-24 lg:px-32 xl:px-48 py-4 rounded-2xl text-xl flex-between border-b bg-white border-gray-300 mb-6">
             <div
               onClick={() => setSelectedTab("data")}
               className={`font-semibold ${selectedTab === "data"
@@ -353,7 +350,7 @@ const CreateQrCodeForm = () => {
                   />
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-4 md:mt-8">
                   <label className="block text-sm font-medium text-gray-700 mb-2">QR Data</label>
 
                   {qrType === "URL" && (
@@ -384,8 +381,6 @@ const CreateQrCodeForm = () => {
                     <PhoneForm typeData={typeData} setTypeData={setTypeData} />
                   )}
 
-
-
                   {qrType === "YOUTUBE" && (
                     <YoutubeForm typeData={typeData} setTypeData={setTypeData} />
                   )}
@@ -402,8 +397,6 @@ const CreateQrCodeForm = () => {
                     <UpiForm typeData={typeData} setTypeData={setTypeData} />
                   )}
 
-
-
                   {qrType === "AUDIO" && (
                     <AudioForm typeData={typeData} setTypeData={setTypeData} />
                   )}
@@ -413,13 +406,12 @@ const CreateQrCodeForm = () => {
 
             {selectedTab === "styles" && (
               <div>
-                <div className="mt-8">
+                <div className="mt-4 md:mt-8">
                   {/* <UploadLogo onUpload={(url:any) => setLogo(url)} /> */}
-                  <UploadImage onUpload={(url: any) => setImage(url)} />
                   <div className="block text-sm font-medium text-gray-700 mb-2">QR Colors</div>
-                  <div className="flex flex-row gap-4 mt-2">
+                  <div className="flex flex-col xl:flex-row gap-4 mt-2">
 
-                    <div className="bg-white p-4 rounded-2xl w-1/2">
+                    <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2">
                       <label className="block text-gray-700 font-semibold text-xs mb-3">Code Color</label>
 
                       {/* Solid / Gradient Toggle */}
@@ -600,7 +592,7 @@ const CreateQrCodeForm = () => {
                     </div>
 
 
-                    <div className="bg-white p-4 rounded-2xl w-1/2">
+                    <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2">
                       <div className="block text-sm font-medium text-gray-700 mb-2">QR Background</div>
 
                       {/* Toggle Solid / Gradient */}
@@ -767,9 +759,9 @@ const CreateQrCodeForm = () => {
                   </div>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-4 md:mt-8">
                   <label className="block text-sm font-medium text-gray-700 mb-2">QR Style</label>
-                  <div className="flex gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                     {[
                       { label: "Square", value: "square", icon: "/qr-styles/square.svg" },
                       { label: "Dots", value: "dots", icon: "/qr-styles/dots.svg" },
@@ -782,22 +774,22 @@ const CreateQrCodeForm = () => {
                         key={style.value}
                         onClick={() => setDotsOptions({ ...dotsOptions, type: style.value })}
                         type="button"
-                        className={`p-2 rounded-lg border-2 ${dotsOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                        className={`flex bg-white items-center justify-center p-2 rounded-lg border-2 ${dotsOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                       >
-                        <div className="bg-white p-2">
-                          <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                        <div className="p-2">
+                          <img src={style.icon} alt={style.label} className="" />
                         </div>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-4 md:mt-8">
                   <div className="block text-sm font-medium text-gray-700 mb-2">Edges</div>
                   <div className="flex flex-col mt-4">
                     <div>
                       <label className="block text-gray-700 font-semibold mb-1 text-xs">Square Style</label>
-                      <div className="flex gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                         {[
                           { label: "Square", value: "square", icon: "/edges-square-styles/square.png" },
                           { label: "Dots", value: "dots", icon: "/edges-square-styles/dots.png" },
@@ -810,17 +802,17 @@ const CreateQrCodeForm = () => {
                             key={style.value}
                             onClick={() => setCornersSquareOptions({ ...cornersSquareOptions, type: style.value })}
                             type="button"
-                            className={`p-2 rounded-lg border-2 ${cornersSquareOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                            className={`flex bg-white items-center justify-center p-2 rounded-lg border-2 ${cornersSquareOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                           >
-                            <div className="bg-white p-2">
-                              <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                            <div className="p-2">
+                              <img src={style.icon} alt={style.label} className="" />
                             </div>
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                    <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2 mt-6">
                       <div className="block text-sm font-medium text-gray-700 mb-2">Square Color</div>
                       <div className="flex items-center gap-6 mb-4">
                         <label className="flex items-center gap-2 cursor-pointer">
@@ -991,7 +983,7 @@ const CreateQrCodeForm = () => {
                   <div className="flex flex-col mt-4">
                     <div>
                       <label className="block text-gray-700 font-semibold mb-1 text-xs">Dot Style</label>
-                      <div className="flex gap-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                         {[
                           { label: "Square", value: "square", icon: "/edges-dot-styles/square.svg" },
                           { label: "Dots", value: "dots", icon: "/edges-dot-styles/dots.svg" },
@@ -1004,17 +996,17 @@ const CreateQrCodeForm = () => {
                             key={style.value}
                             onClick={() => setCornersDotOptions({ ...cornersDotOptions, type: style.value })}
                             type="button"
-                            className={`p-2 rounded-lg border-2 ${cornersDotOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                            className={`flex bg-white items-center justify-center p-2 rounded-lg border-2 ${cornersDotOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                           >
-                            <div className="bg-white p-2">
-                              <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                            <div className="p-2">
+                              <img src={style.icon} alt={style.label} className="" />
                             </div>
                           </button>
                         ))}
                       </div>
                     </div>
 
-                    <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                    <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2 mt-6">
                       <div className="block text-sm font-medium text-gray-700 mb-2">Dot Color</div>
                       <div className="flex items-center gap-6 mb-4">
                         <label className="flex items-center gap-2 cursor-pointer">
@@ -1182,6 +1174,7 @@ const CreateQrCodeForm = () => {
                     </div>
                   </div>
                 </div>
+                <UploadImage onUpload={(url: any) => setImage(url)} />
               </div>
             )}
           </div>
@@ -1193,7 +1186,7 @@ const CreateQrCodeForm = () => {
 
 
   return (
-    <div className="mx-auto mt-8">
+    <div className="mx-auto mt-4 md:mt-8">
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       <form onSubmit={step === 3 ? handleFinalSubmit : (e) => e.preventDefault()} className="space-y-6">
