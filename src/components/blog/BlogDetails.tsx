@@ -8,6 +8,7 @@ interface Blog {
   description?: string;
   content: string;
   image?: string;
+  coverImageUrl?: string;
   createdAt: string;
 }
 
@@ -40,7 +41,9 @@ const BlogDetails: React.FC<BlogDetailsProps> = ({ slug }) => {
   if (!blog) return <div>Blog not found</div>;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 bg-[#F5F5F5]/80 rounded-2xl mt-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 bg-[#F5F5F5]/80 rounded-2xl mt-4 md:mt-8">
+      <img src={blog.coverImageUrl} />
+      {blog.coverImageUrl}
       <h1 className="text-5xl font-extrabold mb-2 text-center justify-center">{blog.title}</h1>
       {blog.image && (
         <img src={blog.image} alt="Cover" className="mb-6 rounded-lg" />

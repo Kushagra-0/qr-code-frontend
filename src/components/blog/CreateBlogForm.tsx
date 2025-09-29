@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import CreateBlogEditor from "./CreateBlogEditor";
 import { baseUrl } from "../../common/constant";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 const CreateBlogForm = () => {
     const [title, setTitle] = useState("");
@@ -11,8 +13,10 @@ const CreateBlogForm = () => {
     const [slug, setSlug] = useState("");
     const [content, setContent] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const token = useAuth();
 
     const navigate = useNavigate();
 
@@ -29,6 +33,30 @@ const CreateBlogForm = () => {
         setSlug(generateSlug(val));
     };
 
+    const handleCoverImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            // Using the /upload/image route for the cover image
+            const res = await axios.post(`${baseUrl}/upload/blog/image`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setCoverImageUrl(res.data.url)
+
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred during cover image upload.");
+        }
+    };
+
     const handleSubmit = async () => {
         setIsSubmitting(true);
 
@@ -37,6 +65,7 @@ const CreateBlogForm = () => {
             description,
             slug,
             content,
+            coverImageUrl,
         };
 
         try {
@@ -85,6 +114,23 @@ const CreateBlogForm = () => {
                     className="w-full text-xl bg-transparent border-b border-gray-200 focus:outline-none my-8 mx-4"
                 />
 
+                <div className="mx-4 my-8">
+                    <label className="block text-lg font-medium text-gray-700 mb-2">Cover Image</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleCoverImageUpload}
+                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-[#036AFF] hover:file:bg-blue-100"
+                    />
+                    {/* Cover Image Preview */}
+                    {coverImageUrl && (
+                        <div className="mt-4">
+                            <img src={coverImageUrl} alt="Cover Preview" className="h-40 w-full object-cover rounded-lg" />
+                        </div>
+                    )}
+                </div>
+
+
                 <div className="mx-4">
                     <CreateBlogEditor content={content} onChange={setContent} />
                 </div>
@@ -112,10 +158,6 @@ const CreateBlogForm = () => {
                                 className="rounded-lg mb-4"
                             />
                         )}
-                        <div
-                            className="blog-content"
-                            dangerouslySetInnerHTML={{ __html: content }}
-                        />
 
                         <div className="flex justify-end gap-4 mt-6">
                             <button

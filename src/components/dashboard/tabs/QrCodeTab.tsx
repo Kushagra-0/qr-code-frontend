@@ -180,7 +180,7 @@ const QrCodeTab = () => {
             </div>
 
             {/* Scrollable QR list */}
-            <div className="overflow-y-auto pr-3 space-y-4 grow mt-4 md:mt-2 custom-scrollbar">
+            <div className="overflow-y-auto pr-0 md:pr-3 space-y-4 grow mt-4 md:mt-2 custom-scrollbar">
                 {paginatedQrs.length === 0 ? (
                     // <p>No QR codes found.</p>    
                     <></>

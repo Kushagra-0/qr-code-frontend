@@ -407,7 +407,6 @@ const CreateQrCodeForm = () => {
             {selectedTab === "styles" && (
               <div>
                 <div className="mt-4 md:mt-8">
-                  {/* <UploadLogo onUpload={(url:any) => setLogo(url)} /> */}
                   <div className="block text-sm font-medium text-gray-700 mb-2">QR Colors</div>
                   <div className="flex flex-col xl:flex-row gap-4 mt-2">
 

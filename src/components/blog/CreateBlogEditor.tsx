@@ -2,9 +2,11 @@ import "./styles/BlogStyles.css"
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import TextStyle from "@tiptap/extension-text-style";
+import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import React from "react";
+import { baseUrl } from "../../common/constant";
+import TiptapImage from '@tiptap/extension-image'; 
 
 interface CreateBlogEditorProps {
     content: string;
@@ -23,7 +25,11 @@ const extensions = [
         },
     }),
     TextStyle,
-    Color
+    Color,
+    TiptapImage.configure({
+        inline: true,
+        allowBase64: true,
+    }),
 ];
 
 const CreateBlogEditor: React.FC<CreateBlogEditorProps> = ({ content, onChange }) => {
@@ -37,6 +43,31 @@ const CreateBlogEditor: React.FC<CreateBlogEditorProps> = ({ content, onChange }
 
     if (!editor) return null;
 
+    const handleImageUpload = (file: File) => {
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Assuming your upload route for images is accessible at /upload/image
+        fetch(`${baseUrl}/upload/blog/image`, {
+            method: "POST",
+            body: formData,
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Image upload failed");
+                return res.json();
+            })
+            .then(data => {
+                editor.chain().focus().setImage({ src: data.url }).run();
+            })
+            .catch(err => {
+                console.error(err);
+                // toast.error("Failed to upload image.");
+            });
+    };
+
+
     const buttonStyle = (isActive: boolean, isDisabled = false) =>
         `px-3 py-1 text-sm rounded-lg  ${isDisabled
             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -44,6 +75,19 @@ const CreateBlogEditor: React.FC<CreateBlogEditorProps> = ({ content, onChange }
                 ? "bg-[#036AFF] text-white"
                 : "bg-white text-gray-800 hover:bg-blue-100"
         }`;
+
+    const addImage = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+            const target = e.target as HTMLInputElement;
+            if (target.files && target.files.length > 0) {
+                handleImageUpload(target.files[0]);
+            }
+        };
+        input.click();
+    };
 
     return (
         <div className="w-full">
@@ -76,6 +120,7 @@ const CreateBlogEditor: React.FC<CreateBlogEditorProps> = ({ content, onChange }
                         action: () => editor.chain().focus().setColor("#958DF1").run(),
                         active: editor.isActive("textStyle", { color: "#958DF1" }),
                     },
+                    { label: "Image", action: addImage, active: false, canRun: true },
                 ].map(({ label, action, active = false, canRun = true }) => (
                     <button
                         key={label}

@@ -92,7 +92,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchQRCode = async () => {
@@ -247,50 +247,48 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
 
 
     return (
-        <div className="grid grid-cols-3 h-[78vh] gap-8 mt-8">
-            <div className="flex justify-center bg-[#F5F5F5]/80 rounded-2xl relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:h-[78vh] gap-4 md:gap-8 mt-4 md:mt-8">
+            <div className="flex items-center justify-center col-span-1 bg-[#F5F5F5]/80 rounded-2xl relative">
                 <img
-                    src="/iphone.png"
+                    src="/iphone-2.png"
                     alt="iPhone"
-                    className="h-[calc(100vh-300px)] object-contain mt-32"
+                    className="block max-h-[70vh] lg:h-[calc(100vh-280px)] object-contain mt-3 md:mt-30 w-auto min-w-[100px]"
                 />
 
                 <div
-                    className="absolute top-[42%] right-[28%] bg-white flex justify-center items-center"
+                    className="absolute flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-8 md:mt-16 bg-white"
                 >
-                    <div className="p-0">
-                        <CustomQRCode
-                            data={`${window.location.origin}/qr/${shortCode}`}
-                            size={220}
-                            margin={0}
-                            image={image}
-                            backgroundOptions={backgroundOptions}
-                            dotsOptions={dotsOptions}
-                            cornersSquareOptions={cornersSquareOptions}
-                            cornersDotOptions={cornersDotOptions}
-                        />
-                    </div>
+                    <CustomQRCode
+                        data={`${window.location.origin}/qr/${shortCode}`}
+                        size={220}
+                        margin={0}
+                        image={image}
+                        backgroundOptions={backgroundOptions}
+                        dotsOptions={dotsOptions}
+                        cornersSquareOptions={cornersSquareOptions}
+                        cornersDotOptions={cornersDotOptions}
+                    />
                 </div>
 
                 <button
                     onClick={handleSubmit}
                     type="submit"
                     disabled={loading}
-                    className={`absolute top-[85%] flex items-center justify-center bg-[#FFFFFF] text-[#036AFF] font-bold px-16 py-2 border-2 border-gray-900 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl ${loading
+                    className={`absolute bottom-4 md:bottom-8 w-5/6 flex items-center justify-center bg-[#FFFFFF] text-[#036AFF] font-bold border-2 border-gray-900 hover:border-gray-200 hover:shadow-[0_0_20px_rgba(100,100,100,0.5)] rounded-xl ${loading
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                         }`}
                 >
                     <button
-                        className={`text-4xl font-bold rounded-lg`}
+                        className={`text-2xl md:text-3xl lg:text-4xl xl:text-4xl px-1 py-3 font-bold rounded-lg`}
                     >
                         {loading ? "SAVING..." : "SAVE CHANGES"}
                     </button>
                 </button>
             </div>
 
-            <div className="bg-[#F5F5F5]/80 rounded-2xl p-8 col-span-2 gap-6 overflow-y-scroll custom-scrollbar">
-                <div className="flex justify-between px-48 py-4 rounded-2xl text-xl flex-between border-b bg-white border-gray-300 mb-6">
+            <div className="bg-[#F5F5F5]/80 rounded-2xl p-4 md:p-8 col-span-1 md:col-span-2 overflow-y-scroll custom-scrollbar">
+                <div className="flex justify-between px-18 md:px-24 lg:px-32 xl:px-48 py-4 rounded-2xl text-xl flex-between border-b bg-white border-gray-300 mb-6">
                     <button
                         onClick={() => setSelectedTab("data")}
                         className={`font-semibold ${selectedTab === "data"
@@ -325,7 +323,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                     />
                                 </div>
 
-                                <div className="mt-8">
+                                <div className="mt-4 md:mt-8">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">QR Data</label>
 
                                     {qrType === "URL" && (
@@ -365,11 +363,10 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
 
                         {selectedTab === "styles" && (
                             <div>
-                                <div className="mt-8">
-                                    <UploadImage onUpload={(url:any) => setImage(url)} />
+                                <div className="mt-4 md:mt-8">
                                     <div className="block text-sm font-medium text-gray-700 mb-2">QR Colors</div>
-                                    <div className="flex flex-row gap-4 mt-2">
-                                        <div className="bg-white p-4 rounded-2xl w-1/2">
+                                    <div className="flex flex-col xl:flex-row gap-4 mt-2">
+                                        <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2">
                                             <label className="block text-gray-700 font-semibold text-xs mb-3">Code Color</label>
 
                                             {/* Solid / Gradient Toggle */}
@@ -549,7 +546,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                             }
                                         </div>
 
-                                        <div className="bg-white p-4 rounded-2xl w-1/2">
+                                        <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2">
                                             <div className="block text-sm font-medium text-gray-700 mb-2">QR Background</div>
 
                                             {/* Toggle Solid / Gradient */}
@@ -716,9 +713,9 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                     </div>
                                 </div>
 
-                                <div className="mt-8 w-full">
+                                <div className="mt-4 md:mt-8 w-full">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">QR Style</label>
-                                    <div className="flex gap-4">
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                                         {[
                                             { label: "Square", value: "square", icon: "/qr-styles/square.svg" },
                                             { label: "Dots", value: "dots", icon: "/qr-styles/dots.svg" },
@@ -731,22 +728,22 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                                 key={style.value}
                                                 onClick={() => setDotsOptions({ ...dotsOptions, type: style.value })}
                                                 type="button"
-                                                className={`p-2 rounded-lg border-2 ${dotsOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                                                className={`flex p-2 bg-white items-center justify-center rounded-lg border-2 ${dotsOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                                             >
-                                                <div className="bg-white p-2">
-                                                    <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                                                <div className="p-2">
+                                                    <img src={style.icon} alt={style.label} className="" />
                                                 </div>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="mt-8">
+                                <div className="mt-4 md:mt-8">
                                     <div className="block text-sm font-medium text-gray-700 mb-2">Edges</div>
                                     <div className="flex flex-col mt-4">
                                         <div>
                                             <label className="block text-gray-700 font-semibold mb-1 text-xs">Square Style</label>
-                                            <div className="flex gap-4">
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                                                 {[
                                                     { label: "Square", value: "square", icon: "/edges-square-styles/square.png" },
                                                     { label: "Dots", value: "dots", icon: "/edges-square-styles/dots.png" },
@@ -759,17 +756,17 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                                         key={style.value}
                                                         onClick={() => setCornersSquareOptions({ ...cornersSquareOptions, type: style.value })}
                                                         type="button"
-                                                        className={`p-2 rounded-lg border-2 ${cornersSquareOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                                                        className={`flex bg-white items-center justify-center p-2 rounded-lg border-2 ${cornersSquareOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                                                     >
-                                                        <div className="bg-white p-2">
-                                                            <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                                                        <div className="p-2">
+                                                            <img src={style.icon} alt={style.label} className="" />
                                                         </div>
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                                        <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2 mt-6">
                                             <div className="block text-sm font-medium text-gray-700 mb-2">Square Color</div>
                                             <div className="flex items-center gap-6 mb-4">
                                                 <label className="flex items-center gap-2 cursor-pointer">
@@ -939,10 +936,10 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
 
                                     </div>
 
-                                    <div className="flex flex-col mt-4">
+                                    <div className="flex flex-col mt-4 md:mt-8">
                                         <div>
                                             <label className="block text-gray-700 font-semibold mb-1 text-xs">Dot Style</label>
-                                            <div className="flex gap-4">
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
                                                 {[
                                                     { label: "Square", value: "square", icon: "/edges-dot-styles/square.svg" },
                                                     { label: "Dots", value: "dots", icon: "/edges-dot-styles/dots.svg" },
@@ -955,17 +952,17 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                                         key={style.value}
                                                         onClick={() => setCornersDotOptions({ ...cornersDotOptions, type: style.value })}
                                                         type="button"
-                                                        className={`p-2 rounded-lg border-2 ${cornersDotOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
+                                                        className={`flex items-center justify-center bg-white p-2 rounded-lg border-2 ${cornersDotOptions.type === style.value ? "border-blue-500" : "border-transparent"} hover:border-gray-400`}
                                                     >
-                                                        <div className="bg-white p-2">
-                                                            <img src={style.icon} alt={style.label} className="w-28 h-28" />
+                                                        <div className="p-2">
+                                                            <img src={style.icon} alt={style.label} className="" />
                                                         </div>
                                                     </button>
                                                 ))}
                                             </div>
                                         </div>
 
-                                        <div className="bg-white p-4 rounded-2xl w-1/2 mt-6">
+                                        <div className="bg-white p-4 rounded-2xl w-full xl:w-1/2 mt-6">
                                             <div className="flex items-center gap-6 mb-4">
                                                 <label className="flex items-center gap-2 cursor-pointer">
                                                     <input
@@ -1132,6 +1129,7 @@ const EditQrCodeForm: React.FC<EditQrCodeFormProps> = ({ id }) => {
                                         </div>
                                     </div>
                                 </div>
+                                <UploadImage onUpload={(url: any) => setImage(url)} />
                             </div>
                         )}
                     </div>

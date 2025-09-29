@@ -6,7 +6,7 @@ const EditQrCode = () => {
     const { id } = useParams();
 
     return (
-        <div className="bg-gradient-to-r from-blue-200 to-pink-200 p-8 min-h-screen w-full">
+        <div className="bg-gradient-to-r from-blue-200 to-pink-200 p-4 md:p-8 min-h-screen w-full">
             <Navbar />
             <EditQrCodeForm id={id} />
         </div>
